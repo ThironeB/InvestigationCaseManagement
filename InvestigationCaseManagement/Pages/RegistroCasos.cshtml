@@ -1,0 +1,138 @@
+﻿@page
+@model RegistroCasosModel
+@{
+    ViewData["Title"] = "Registro de Casos";
+}
+
+<h2>Registro de Casos</h2>
+
+<form method="post" id="RegistroCasoForm">
+    <div class="form-group">
+        <label asp-for="Caso.NumeroExpediente">Número de Expediente</label>
+        <input asp-for="Caso.NumeroExpediente" class="form-control" />
+        <span asp-validation-for="Caso.NumeroExpediente" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Caso.InvestigadorId">Investigador</label>
+        @if (User.IsInRole("Administrador"))
+        {
+            <select id="investigadorSelect" asp-for="Caso.InvestigadorId" class="form-control" asp-items="Model.Investigadores"></select>
+        }
+        else
+        {
+            <input id="investigadorInput" class="form-control" value="@Model.UsuarioActualText" readonly />
+            <input type="hidden" id="investigadorInput2" asp-for="Caso.InvestigadorId" class="form-control" value="@Model.UsuarioActualId" readonly />
+        }
+        <span asp-validation-for="Caso.InvestigadorId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Caso.FechaInicio">Fecha de Inicio</label>
+        <input asp-for="Caso.FechaInicio" type="date" class="form-control" readonly value="@Model.Caso.FechaInicio.ToString("yyyy-MM-dd")" />
+        <span asp-validation-for="Caso.FechaInicio" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Caso.DuracionDias">Duración (Días)</label>
+        <input asp-for="Caso.DuracionDias" type="number" class="form-control" />
+        <span asp-validation-for="Caso.DuracionDias" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Caso.TipoCaso">Tipo de Caso</label>
+        <select asp-for="Caso.TipoCaso" class="form-control">
+            <option value="Gestión">Gestión</option>
+            <option value="Reclamo">Reclamo</option>
+            <option value="Caso">Caso</option>
+        </select>
+        <span asp-validation-for="Caso.TipoCaso" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Caso.TipoIrregularidad">Tipo de Irregularidad</label>
+        <input asp-for="Caso.TipoIrregularidad" class="form-control" />
+        <span asp-validation-for="Caso.TipoIrregularidad" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Caso.SubtipoIrregularidad">Subtipo de Irregularidad</label>
+        <input asp-for="Caso.SubtipoIrregularidad" class="form-control" />
+        <span asp-validation-for="Caso.SubtipoIrregularidad" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Caso.MovilAfectado">Móvil Afectado</label>
+        <input asp-for="Caso.MovilAfectado" class="form-control" />
+        <span asp-validation-for="Caso.MovilAfectado" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Caso.ObjetivoAgraviado">Objetivo/Agraviado</label>
+        <input asp-for="Caso.ObjetivoAgraviado" class="form-control" />
+        <span asp-validation-for="Caso.ObjetivoAgraviado" class="text-danger"></span>
+    </div>
+
+    <!-- Campos adicionales -->
+    <div class="form-group">
+        <label asp-for="Caso.Incidencia">Incidencia</label>
+        <textarea asp-for="Caso.Incidencia" class="form-control"></textarea>
+        <span asp-validation-for="Caso.Incidencia" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Caso.ModusOperandi">Modus Operandi</label>
+        <textarea asp-for="Caso.ModusOperandi" class="form-control"></textarea>
+        <span asp-validation-for="Caso.ModusOperandi" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Caso.AreaApoyo">Área de Apoyo</label>
+        <input asp-for="Caso.AreaApoyo" class="form-control" />
+        <span asp-validation-for="Caso.AreaApoyo" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Caso.OrigenCaso">Origen del Caso</label>
+        <input asp-for="Caso.OrigenCaso" class="form-control" />
+        <span asp-validation-for="Caso.OrigenCaso" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Caso.DetallesFraude">Detalles de Fraude</label>
+        <textarea asp-for="Caso.DetallesFraude" class="form-control"></textarea>
+        <span asp-validation-for="Caso.DetallesFraude" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Caso.Actuaciones">Actuaciones Realizadas</label>
+        <textarea asp-for="Caso.Actuaciones" class="form-control"></textarea>
+        <span asp-validation-for="Caso.Actuaciones" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Caso.Conclusiones">Conclusiones</label>
+        <textarea asp-for="Caso.Conclusiones" class="form-control"></textarea>
+        <span asp-validation-for="Caso.Conclusiones" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Caso.Recomendaciones">Recomendaciones</label>
+        <textarea asp-for="Caso.Recomendaciones" class="form-control"></textarea>
+        <span asp-validation-for="Caso.Recomendaciones" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Caso.Observaciones">Observaciones</label>
+        <textarea asp-for="Caso.Observaciones" class="form-control"></textarea>
+        <span asp-validation-for="Caso.Observaciones" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Caso.Soporte">Soporte</label>
+        <textarea asp-for="Caso.Soporte" class="form-control"></textarea>
+        <span asp-validation-for="Caso.Soporte" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Registrar Caso</button>
+</form>

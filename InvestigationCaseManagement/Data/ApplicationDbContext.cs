@@ -10,5 +10,7 @@ namespace InvestigationCaseManagement.Data
             : base(options)
         {
         }
+
+        public DbSet<Caso> Casos { get; set; }
     }
 }

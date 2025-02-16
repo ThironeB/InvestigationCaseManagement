@@ -1,0 +1,36 @@
+# Archivos generados por el compilador
+bin/
+obj/
+
+# Archivos de configuración de Visual Studio
+.vs/
+
+# Archivos de la carpeta wwwroot (si no son estáticos)
+wwwroot/
+
+# Archivos de usuario de Visual Studio
+*.user
+*.suo
+*.userprefs
+
+# Archivos de salida de compilación
+**/[Dd]ebug/
+**/[Rr]elease/
+**/[Bb]in/
+**/[Oo]bj/
+
+# Archivos de NuGet
+**/packages/
+**/nuget.exe
+**/.nuget/
+**/NuGet.Config
+**/NuGet.exe
+**/NuGet.targets
+
+# Archivos de logs y temporales
+*.log
+*.tmp
+*.temp
+
+# Archivos de configuración local
+appsettings.Development.json
