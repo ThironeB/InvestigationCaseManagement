@@ -41,10 +41,10 @@ namespace InvestigationCaseManagement.Data
         public string OrigenCaso { get; set; } // Origen del caso
         public string DetallesFraude { get; set; } // Detalles de fraude
         public string Actuaciones { get; set; } // Actuaciones realizadas
-        public string Conclusiones { get; set; } // Conclusiones
-        public string Recomendaciones { get; set; } // Recomendaciones
-        public string Observaciones { get; set; } // Observaciones
-        public string Soporte { get; set; } // Soporte
+        public string? Conclusiones { get; set; } // Conclusiones
+        public string? Recomendaciones { get; set; } // Recomendaciones
+        public string? Observaciones { get; set; } // Observaciones
+        public string? Soporte { get; set; } // Soporte
         public string Estado { get; set; } // Estado del caso (Abierto, Asignado, Cerrado, Re-abierto)
     }
 }
