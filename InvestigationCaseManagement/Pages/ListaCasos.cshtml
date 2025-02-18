@@ -1,0 +1,39 @@
+﻿@page
+@model InvestigationCaseManagement.Pages.ListaCasosModel
+@{
+    ViewData["Title"] = "Lista de Casos";
+}
+
+<h2>Lista de Casos</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Número de Expediente</th>
+            <th>Investigador Asignado</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var caso in Model.Casos)
+        {
+            <tr>
+                <td>@caso.NumeroExpediente</td>
+                <td>@caso.Investigador?.UserName</td>
+                <td>@caso.Estado</td>
+                <td>
+                    @if (caso.Estado == "Cerrado")
+                    {
+                        <a asp-page="/GestionarCaso" asp-route-id="@caso.Id" asp-route-modo="ReAbrir" class="btn btn-success">ReAbrir</a>
+                    }
+                    else
+                    {
+                        <a asp-page="/GestionarCaso" asp-route-id="@caso.Id" asp-route-modo="Editar" class="btn btn-primary">Editar</a>
+                        <a asp-page="/GestionarCaso" asp-route-id="@caso.Id" asp-route-modo="Cerrar" class="btn btn-danger">Cerrar</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
