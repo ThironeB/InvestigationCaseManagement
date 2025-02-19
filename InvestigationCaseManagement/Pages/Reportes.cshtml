@@ -1,0 +1,78 @@
+﻿@page
+@model InvestigationCaseManagement.Pages.ReportesModel
+@{
+    ViewData["Title"] = "Reportes";
+}
+
+<h2>Reportes</h2>
+
+<!-- Selector de Reporte -->
+<div class="form-group">
+    <label for="tipoReporte">Seleccione un reporte:</label>
+    <select id="tipoReporte" class="form-control" onchange="cambiarReporte()">
+        <option value="empresas">Empresas con casos registrados</option>
+        <option value="investigadores">Investigadores por casos</option>
+    </select>
+</div>
+
+<!-- Tabla Empresas -->
+<div id="reporteEmpresas">
+    <h3>Empresas con casos registrados</h3>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Empresa</th>
+                <th>Cantidad de Casos Registrados</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var empresa in Model.Empresas)
+            {
+                <tr>
+                    <td>@empresa.Nombre</td>
+                    <td>@empresa.CasosRegistrados</td>
+                    <td>
+                        <a asp-page="/DetalleEmpresa" asp-route-id="@empresa.Id" class="btn btn-primary btn-sm">Ver Detalles</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- Tabla Investigadores -->
+<div id="reporteInvestigadores" style="display: none;">
+    <h3>Investigadores por casos atendidos</h3>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Investigador</th>
+                <th>Cantidad de Casos Atendidos</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var investigador in Model.Investigadores)
+            {
+                <tr>
+                    <td>@investigador.Nombre</td>
+                    <td>@investigador.CasosAtendidos</td>
+                    <td>
+                        <a asp-page="/DetalleInvestigador" asp-route-id="@investigador.Id" class="btn btn-primary btn-sm">Ver Detalles</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script>
+        function cambiarReporte() {
+            var tipo = document.getElementById("tipoReporte").value;
+            document.getElementById("reporteEmpresas").style.display = (tipo === "empresas") ? "block" : "none";
+            document.getElementById("reporteInvestigadores").style.display = (tipo === "investigadores") ? "block" : "none";
+        }
+    </script>
+}

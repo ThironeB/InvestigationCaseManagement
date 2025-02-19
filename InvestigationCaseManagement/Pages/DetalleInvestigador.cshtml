@@ -1,0 +1,52 @@
+﻿@page "{id}"
+@model InvestigationCaseManagement.Pages.DetalleInvestigadorModel
+@{
+    ViewData["Title"] = "Detalle del Investigador";
+}
+
+<h2>Detalle del Investigador</h2>
+<h4>@Model.Investigador</h4>
+
+@if (Model.Casos.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID Caso</th>
+                <th>Numero de Expediente</th>
+                <th>Fecha de Inicio</th>
+                <th>Fecha de Actualizacion</th>
+                <th>Investigador</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var caso in Model.Casos)
+            {
+                <tr>
+                    <td>@caso.Id</td>
+                    <td>@caso.NumeroExpediente</td>
+                    <td>@caso.FechaInicio.ToString("yyyy-MM-dd")</td>
+                    <td>
+                        @if (caso.UltimaActualizacion == DateTime.MinValue)
+                        {
+                            @:<!-- Si es la fecha por defecto, mostramos un valor vacío -->
+                        }
+                        else
+                        {
+                            @caso.UltimaActualizacion.ToString("yyyy-MM-dd")
+                        }
+                    </td>
+                    <td>@caso.Investigador</td>
+                    <td>@caso.Estado</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No hay casos registrados para este investigador.</p>
+}
+
+<a asp-page="/Reportes" class="btn btn-secondary">Volver</a>
