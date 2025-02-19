@@ -22,7 +22,7 @@ namespace InvestigationCaseManagement.Pages
                 // Si el usuario es Administrador, ver todos los casos
                 Casos = await _context.Casos
                     .Include(c => c.Investigador) // Cargar la relación con el investigador
-                    .OrderBy(c => c.NumeroExpediente) // Ordenar por número de expediente
+                    .OrderBy(c => c.Id) // Ordenar por id
                     .ToListAsync();
             }
             else if (rolesUsuario.Contains("Investigador"))
@@ -31,7 +31,7 @@ namespace InvestigationCaseManagement.Pages
                 Casos = await _context.Casos
                     .Include(c => c.Investigador) // Cargar la relación con el investigador
                     .Where(c => c.InvestigadorId == usuarioActual.Id) // Filtrar por el ID del investigador
-                    .OrderBy(c => c.NumeroExpediente) // Ordenar por número de expediente
+                    .OrderBy(c => c.Id) // Ordenar por id
                     .ToListAsync();
             }
         }
