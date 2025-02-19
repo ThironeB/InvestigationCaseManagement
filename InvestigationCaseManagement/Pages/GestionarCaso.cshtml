@@ -86,6 +86,73 @@
             </div>
         </div>
 
+        <div class="d-flex gap-3" style="padding-right: 3rem;">
+            <div class="form-group col-md-3">
+                <label asp-for="Caso.ProcesoRealizadoId">Proceso Realizado</label>
+                <select asp-for="Caso.ProcesoRealizadoId" class="form-control">
+                    @foreach (var proceso in ProcesoRealizado.ObtenerProcesos())
+                    {
+                        <option value="@proceso.Id">@proceso.Proceso</option>
+                    }
+                </select>
+                <span asp-validation-for="Caso.ProcesoRealizadoId" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-3">
+                <label asp-for="Caso.EmpresaId">Empresa</label>
+                <select asp-for="Caso.EmpresaId" class="form-control">
+                    @foreach (var empresa in Empresa.ObtenerEmpresa())
+                    {
+                        <option value="@empresa.Id">@empresa.Nombre</option>
+                    }
+                </select>
+                <span asp-validation-for="Caso.EmpresaId" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-3">
+                <label asp-for="Caso.SubTipoFichaId">Subtipo de Ficha</label>
+                <select asp-for="Caso.SubTipoFichaId" class="form-control">
+                    @foreach (var subtipo in SubTipoFicha.ObtenerSubTipoFicha())
+                    {
+                        <option value="@subtipo.Id">@subtipo.sSubTipoFicha</option>
+                    }
+                </select>
+                <span asp-validation-for="Caso.SubTipoFichaId" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-3">
+                <label asp-for="Caso.TipoIrregularidadId">Tipo de Irregularidad</label>
+                <select asp-for="Caso.TipoIrregularidadId" class="form-control">
+                    @foreach (var tipo in TipoIrregularidad.ObtenerTipoIrregularidad())
+                    {
+                        <option value="@tipo.Id">@tipo.Tipo</option>
+                    }
+                </select>
+                <span asp-validation-for="Caso.TipoIrregularidadId" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="d-flex gap-3" style="padding-right: 3rem;">
+            <div class="form-group col-md-3">
+                <label asp-for="Caso.SubTipoIrregularidadId">SubTipo de Irregularidad</label>
+                <select asp-for="Caso.SubTipoIrregularidadId" class="form-control">
+                    @foreach (var subtipo in SubTipoIrregularidad.ObtenerSubTipoIrregularidad())
+                    {
+                        <option value="@subtipo.Id">@subtipo.SubTipo</option>
+                    }
+                </select>
+                <span asp-validation-for="Caso.SubTipoIrregularidadId" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-3">
+                <label asp-for="Caso.ProcedenciaCasoId">Procedencia del Caso</label>
+                <select asp-for="Caso.ProcedenciaCasoId" class="form-control">
+                    @foreach (var procedencia in ProcedenciaCaso.ObtenerProcedenciaCaso())
+                    {
+                        <option value="@procedencia.Id">@procedencia.Procedencia</option>
+                    }
+                </select>
+                <span asp-validation-for="Caso.ProcedenciaCasoId" class="text-danger"></span>
+            </div>
+        </div>
+
+
         <div class="d-flex gap-3" style="padding-right: 1rem;">
             <div class="form-group col-md-6">
                 <label asp-for="Caso.MovilAfectado">Móvil Afectado</label>
