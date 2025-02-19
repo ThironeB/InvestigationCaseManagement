@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace InvestigationCaseManagement.Data
 {
@@ -59,6 +60,13 @@ namespace InvestigationCaseManagement.Data
         public string Estado { get; set; } // Estado del caso (Abierto, Asignado, Cerrado, Re-abierto)
 
         public DateTime UltimaActualizacion { get; set; }
+
+        [Required]
+        public string PersonasInvolucradas { get; set; }
+
+        [Required]
+        [Precision(18,2)]
+        public Decimal MontoExpuesto { get; set; }
 
         [Required]
         public int TipoProyectoId { get; set; }

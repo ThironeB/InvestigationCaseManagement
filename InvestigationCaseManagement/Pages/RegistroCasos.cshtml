@@ -139,6 +139,20 @@
         </div>
     </div>
 
+    <div class="d-flex gap-3" style="padding-right: 1rem;">
+        <div class="form-group col-md-6">
+            <label asp-for="Caso.PersonasInvolucradas">Personas Involucradas</label>
+            <input asp-for="Caso.PersonasInvolucradas" class="form-control" />
+            <span asp-validation-for="Caso.PersonasInvolucradas" class="text-danger"></span>
+        </div>
+
+        <div class="form-group col-md-6">
+            <label asp-for="Caso.MontoExpuesto">Monto Expuesto</label>
+            <input type="number" step="any" asp-for="Caso.MontoExpuesto" class="form-control">
+            <span asp-validation-for="Caso.MontoExpuesto" class="text-danger"></span>
+        </div>
+    </div>
+
     <div class="form-group">
         <label asp-for="Caso.Conclusiones">Conclusiones / Recomendaciones</label>
         <textarea asp-for="Caso.Conclusiones" class="form-control" readonly></textarea>

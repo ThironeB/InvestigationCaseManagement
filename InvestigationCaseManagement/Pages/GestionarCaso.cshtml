@@ -143,6 +143,20 @@
                 <span asp-validation-for="Caso.Actuaciones" class="text-danger"></span>
             </div>
         </div>
+
+        <div class="d-flex gap-3" style="padding-right: 1rem;">
+            <div class="form-group col-md-6">
+                <label asp-for="Caso.PersonasInvolucradas">Personas Involucradas</label>
+                <input asp-for="Caso.PersonasInvolucradas" class="form-control" />
+                <span asp-validation-for="Caso.PersonasInvolucradas" class="text-danger"></span>
+            </div>
+
+            <div class="form-group col-md-6">
+                <label asp-for="Caso.MontoExpuesto">Monto Expuesto</label>
+                <input type="number" step="any" asp-for="Caso.MontoExpuesto" class="form-control">
+                <span asp-validation-for="Caso.MontoExpuesto" class="text-danger"></span>
+            </div>
+        </div>
     </div>
 
     <div id="contenedorCasoCerrar" style="@((bool)ViewData["EsReAbierto"] && !(bool)ViewData["EsSoloLectura"] ? "pointer-events: none; opacity: 0.7;" : "")">
