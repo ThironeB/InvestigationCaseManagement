@@ -7,14 +7,14 @@
 <h2>Registro de Casos</h2>
 
 <form method="post" id="RegistroCasoForm">
-    <div class="d-flex gap-3">
-        <div class="form-group col-md-6">
+    <div class="d-flex gap-3" style="padding-right: 3rem;">
+        <div class="form-group col-md-3">
             <label asp-for="Caso.NumeroExpediente">Número de Expediente</label>
             <input asp-for="Caso.NumeroExpediente" class="form-control" />
             <span asp-validation-for="Caso.NumeroExpediente" class="text-danger"></span>
         </div>
 
-        <div class="form-group col-md-6">
+        <div class="form-group col-md-3">
             <label asp-for="Caso.InvestigadorId">Investigador</label>
             @if (User.IsInRole("Administrador"))
             {
@@ -27,24 +27,50 @@
             }
             <span asp-validation-for="Caso.InvestigadorId" class="text-danger"></span>
         </div>
-    </div>
-
-    <div class="d-flex gap-3">
-        <div class="form-group col-md-6">
+        <div class="form-group col-md-3">
             <label asp-for="Caso.FechaInicio">Fecha de Inicio</label>
             <input asp-for="Caso.FechaInicio" type="date" class="form-control" readonly value="@Model.Caso.FechaInicio.ToString("yyyy-MM-dd")" />
             <span asp-validation-for="Caso.FechaInicio" class="text-danger"></span>
         </div>
-
-		<div class="form-group col-md-6">
-			<label asp-for="Caso.DuracionDias">Duración (Días)</label>
-			<input asp-for="Caso.DuracionDias" type="number" class="form-control" />
-			<span asp-validation-for="Caso.DuracionDias" class="text-danger"></span>
-		</div>
+        <div class="form-group col-md-3">
+            <label asp-for="Caso.DuracionDias">Duración (Días)</label>
+            <input asp-for="Caso.DuracionDias" type="number" class="form-control" />
+            <span asp-validation-for="Caso.DuracionDias" class="text-danger"></span>
+        </div>
     </div>
 
-    <div class="d-flex gap-3">
-        <div class="form-group col-md-6">
+    <div class="d-flex gap-3" style="padding-right: 3rem;">
+        <div class="form-group col-md-3">
+            <label asp-for="Caso.TipoProyectoId">Tipo de proyecto</label>
+            <select asp-for="Caso.TipoProyectoId" class="form-control">
+                @foreach (var tipo in TipoProyecto.ObtenerTipos())
+                {
+                    <option value="@tipo.Id">@tipo.Tipo</option>
+                }
+            </select>
+            <span asp-validation-for="Caso.TipoProyectoId" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-3">
+            <label asp-for="Caso.TipoBrechaId">Tipo de brecha</label>
+            <select asp-for="Caso.TipoBrechaId" class="form-control">
+                @foreach (var tipo in TipoBrecha.ObtenerTipos())
+                {
+                    <option value="@tipo.Id">@tipo.Tipo</option>
+                }
+            </select>
+            <span asp-validation-for="Caso.TipoBrechaId" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-3">
+            <label asp-for="Caso.ProcesoCorregidoId">Proceso corregido</label>
+            <select asp-for="Caso.ProcesoCorregidoId" class="form-control">
+                @foreach (var proceso in ProcesoCorregido.ObtenerProcesos())
+                {
+                    <option value="@proceso.Id">@proceso.Proceso</option>
+                }
+            </select>
+            <span asp-validation-for="Caso.ProcesoCorregidoId" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-3">
             <label asp-for="Caso.TipoCaso">Tipo de Caso</label>
             <select asp-for="Caso.TipoCaso" class="form-control">
                 <option value="Gestión">Gestión</option>
@@ -53,102 +79,110 @@
             </select>
             <span asp-validation-for="Caso.TipoCaso" class="text-danger"></span>
         </div>
-
-        <div class="form-group col-md-6">
-            <label asp-for="Caso.TipoIrregularidad">Tipo de Irregularidad</label>
-            <input asp-for="Caso.TipoIrregularidad" class="form-control" />
-            <span asp-validation-for="Caso.TipoIrregularidad" class="text-danger"></span>
-        </div>
     </div>
-
-    <div class="d-flex gap-3">
-        <div class="form-group col-md-6">
-            <label asp-for="Caso.SubtipoIrregularidad">Subtipo de Irregularidad</label>
-            <input asp-for="Caso.SubtipoIrregularidad" class="form-control" />
-            <span asp-validation-for="Caso.SubtipoIrregularidad" class="text-danger"></span>
-        </div>
-
+    
+    <div class="d-flex gap-3" style="padding-right: 1rem;">
         <div class="form-group col-md-6">
             <label asp-for="Caso.MovilAfectado">Móvil Afectado</label>
             <input asp-for="Caso.MovilAfectado" class="form-control" />
             <span asp-validation-for="Caso.MovilAfectado" class="text-danger"></span>
         </div>
-    </div>
-
-    <div class="d-flex gap-3">
         <div class="form-group col-md-6">
             <label asp-for="Caso.ObjetivoAgraviado">Objetivo/Agraviado</label>
             <input asp-for="Caso.ObjetivoAgraviado" class="form-control" />
             <span asp-validation-for="Caso.ObjetivoAgraviado" class="text-danger"></span>
         </div>
+    </div>
 
+    <div class="d-flex ">
         <!-- Campos adicionales -->
-        <div class="form-group col-md-6">
+        <div class="form-group col-md-12">
             <label asp-for="Caso.Incidencia">Incidencia</label>
             <textarea asp-for="Caso.Incidencia" class="form-control"></textarea>
             <span asp-validation-for="Caso.Incidencia" class="text-danger"></span>
         </div>
     </div>
 
-    <div class="d-flex gap-3">
+    <div class="d-flex gap-3" style="padding-right: 1rem;">
         <div class="form-group col-md-6">
-            <label asp-for="Caso.ModusOperandi">Modus Operandi</label>
+            <label asp-for="Caso.ModusOperandi">Descripcion Modus Operandi</label>
             <textarea asp-for="Caso.ModusOperandi" class="form-control"></textarea>
             <span asp-validation-for="Caso.ModusOperandi" class="text-danger"></span>
         </div>
 
         <div class="form-group col-md-6">
-            <label asp-for="Caso.AreaApoyo">Área de Apoyo</label>
+            <label asp-for="Caso.AreaApoyo">Área de Apoyo a Resolver</label>
             <input asp-for="Caso.AreaApoyo" class="form-control" />
             <span asp-validation-for="Caso.AreaApoyo" class="text-danger"></span>
         </div>
     </div>
 
-    <div class="d-flex gap-3">
+    <div class="d-flex gap-3" style="padding-right: 1rem;">
         <div class="form-group col-md-6">
-            <label asp-for="Caso.OrigenCaso">Origen del Caso</label>
+            <label asp-for="Caso.OrigenCaso">Detección / Procedencia del Caso</label>
             <input asp-for="Caso.OrigenCaso" class="form-control" />
             <span asp-validation-for="Caso.OrigenCaso" class="text-danger"></span>
         </div>
 
         <div class="form-group col-md-6">
-            <label asp-for="Caso.DetallesFraude">Detalles de Fraude</label>
+            <label asp-for="Caso.DetallesFraude">Diagnostico / Detalle de Comprobación para Determinar Fraude</label>
             <textarea asp-for="Caso.DetallesFraude" class="form-control"></textarea>
             <span asp-validation-for="Caso.DetallesFraude" class="text-danger"></span>
         </div>
     </div>
 
     <div class="d-flex gap-3">
-        <div class="form-group col-md-6">
-            <label asp-for="Caso.Actuaciones">Actuaciones Realizadas</label>
+        <div class="form-group col-md-12">
+            <label asp-for="Caso.Actuaciones">Actuaciones/Acciones Realizadas</label>
             <textarea asp-for="Caso.Actuaciones" class="form-control"></textarea>
             <span asp-validation-for="Caso.Actuaciones" class="text-danger"></span>
         </div>
     </div>
 
     <div class="form-group">
-        <label asp-for="Caso.Conclusiones">Conclusiones</label>
-        <textarea asp-for="Caso.Conclusiones" class="form-control"></textarea>
-        <span asp-validation-for="Caso.Conclusiones" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Caso.Recomendaciones">Recomendaciones</label>
-        <textarea asp-for="Caso.Recomendaciones" class="form-control"></textarea>
-        <span asp-validation-for="Caso.Recomendaciones" class="text-danger"></span>
+        <label asp-for="Caso.Conclusiones">Conclusiones / Recomendaciones</label>
+        <textarea asp-for="Caso.Conclusiones" class="form-control" readonly></textarea>
+        @* <span asp-validation-for="Caso.Conclusiones" class="text-danger"></span> *@
     </div>
 
     <div class="form-group">
         <label asp-for="Caso.Observaciones">Observaciones</label>
-        <textarea asp-for="Caso.Observaciones" class="form-control"></textarea>
-        <span asp-validation-for="Caso.Observaciones" class="text-danger"></span>
+        <textarea asp-for="Caso.Observaciones" class="form-control" readonly></textarea>
+        @* <span asp-validation-for="Caso.Observaciones" class="text-danger"></span> *@
     </div>
 
     <div class="form-group">
         <label asp-for="Caso.Soporte">Soporte</label>
-        <textarea asp-for="Caso.Soporte" class="form-control"></textarea>
-        <span asp-validation-for="Caso.Soporte" class="text-danger"></span>
+        <textarea asp-for="Caso.Soporte" class="form-control" readonly></textarea>
+        @* <span asp-validation-for="Caso.Soporte" class="text-danger"></span> *@
     </div>
 
-    <button type="submit" class="btn btn-primary">Registrar Caso</button>
+    <button style="margin-top: 1rem;" type="submit" class="btn btn-primary">Registrar Caso</button>
 </form>
+
+<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="successModalLabel">Éxito</h5>
+            </div>
+            <div class="modal-body">
+                La acción se completó de forma satisfactoria.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btnAceptar" onclick="window.location.href='/Index'">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Si ViewData["MostrarPopup"] es true, mostrar la modal
+    window.onload = function() {
+        var mostrarPopup = '@ViewData["MostrarPopup"]';
+        if (mostrarPopup === 'True') {
+            var modal = new bootstrap.Modal(document.getElementById('successModal'));
+            modal.show();
+        }
+    };
+</script>

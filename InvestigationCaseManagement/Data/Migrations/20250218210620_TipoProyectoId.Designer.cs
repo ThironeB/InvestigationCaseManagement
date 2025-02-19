@@ -4,6 +4,7 @@ using InvestigationCaseManagement.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InvestigationCaseManagement.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250218210620_TipoProyectoId")]
+    partial class TipoProyectoId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,7 +42,6 @@ namespace InvestigationCaseManagement.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Conclusiones")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DetallesFraude")
@@ -47,9 +49,6 @@ namespace InvestigationCaseManagement.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("DuracionDias")
-                        .HasColumnType("int");
-
-                    b.Property<int>("EmpresaId")
                         .HasColumnType("int");
 
                     b.Property<string>("Estado")
@@ -84,47 +83,32 @@ namespace InvestigationCaseManagement.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Observaciones")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("OrigenCaso")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ProcedenciaCasoId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProcesoCorregidoId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProcesoRealizadoId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Soporte")
-                        .IsRequired()
+                    b.Property<string>("Recomendaciones")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SubTipoFichaId")
-                        .HasColumnType("int");
+                    b.Property<string>("Soporte")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SubTipoIrregularidadId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TipoBrechaId")
-                        .HasColumnType("int");
+                    b.Property<string>("SubtipoIrregularidad")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TipoCaso")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("TipoIrregularidadId")
-                        .HasColumnType("int");
+                    b.Property<string>("TipoIrregularidad")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("TipoProyectoId")
                         .HasColumnType("int");
-
-                    b.Property<DateTime>("UltimaActualizacion")
-                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
