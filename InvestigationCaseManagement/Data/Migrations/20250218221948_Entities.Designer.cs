@@ -4,6 +4,7 @@ using InvestigationCaseManagement.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InvestigationCaseManagement.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250218221948_Entities")]
+    partial class Entities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,7 +42,6 @@ namespace InvestigationCaseManagement.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Conclusiones")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DetallesFraude")
@@ -84,7 +86,6 @@ namespace InvestigationCaseManagement.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Observaciones")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("OrigenCaso")
@@ -100,8 +101,10 @@ namespace InvestigationCaseManagement.Data.Migrations
                     b.Property<int>("ProcesoRealizadoId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Recomendaciones")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Soporte")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("SubTipoFichaId")
@@ -122,9 +125,6 @@ namespace InvestigationCaseManagement.Data.Migrations
 
                     b.Property<int>("TipoProyectoId")
                         .HasColumnType("int");
-
-                    b.Property<DateTime>("UltimaActualizacion")
-                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 

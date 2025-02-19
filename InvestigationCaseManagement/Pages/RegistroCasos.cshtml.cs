@@ -54,13 +54,9 @@ public class RegistroCasosModel : PageModel
 
     public async Task<IActionResult> OnPostAsync()
     {
-        ModelState.Remove("Caso.Estado");
-        ModelState.Remove("Caso.Investigador");
-        // Asignar el estado del caso
-        Caso.Estado = User.IsInRole("Administrador") ? "Asignado" : "Abierto";
+        RemoveModelState();
 
         var investigador = await _userManager.FindByIdAsync(Caso.InvestigadorId);
-
         if (investigador != null)
         {
             Caso.Investigador = investigador;
@@ -70,16 +66,34 @@ public class RegistroCasosModel : PageModel
             return Page();
         }
 
-
         if (!ModelState.IsValid)
         {
             await OnGetAsync();
             return Page();
         }
 
+        Caso.Conclusiones = string.Empty;
+        Caso.Observaciones = string.Empty;
+        Caso.Soporte = string.Empty;
+
+        await RegistrarCaso(Caso);
+
+        return Page();
+    }
+    public void RemoveModelState()
+    {
+        ModelState.Remove("Caso.Estado");
+        ModelState.Remove("Caso.Investigador");
+        ModelState.Remove("Caso.Conclusiones");
+        ModelState.Remove("Caso.Observaciones");
+        ModelState.Remove("Caso.Soporte");
+    }
+    public async Task RegistrarCaso(Caso caso)
+    {
+        caso.Estado = User.IsInRole("Administrador") ? "Asignado" : "Abierto";
+
         _context.Casos.Add(Caso);
         await _context.SaveChangesAsync();
-
-        return RedirectToPage("./Index");
+        ViewData["MostrarPopup"] = true;
     }
 }

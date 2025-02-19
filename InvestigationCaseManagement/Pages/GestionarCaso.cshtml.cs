@@ -44,9 +44,7 @@ namespace InvestigationCaseManagement.Pages
 
             if (modo == "ReAbrir")
             {
-                Caso.Estado = "ReAbierto";
-                _context.Attach(Caso).State = EntityState.Modified;
-                await _context.SaveChangesAsync();
+                await ReAbrirCaso(Caso);
                 return RedirectToPage("ListaCasos");
             }
 
@@ -70,21 +68,26 @@ namespace InvestigationCaseManagement.Pages
             }
 
             ViewData["EsSoloLectura"] = (Modo == "Cerrar");
+            ViewData["EsReAbierto"] = Caso.Estado == "ReAbierto";
 
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
-            ModelState.Remove("Caso.Estado");
-            ModelState.Remove("Caso.Investigador");
+            RemoveModelState();
             byte[]? previousState;
             var pState = HttpContext.Session.TryGetValue("previousState", out previousState);
             Caso.Estado = previousState != null ? System.Text.Encoding.UTF8.GetString(previousState) : "";
 
-            if (Caso.Estado == null)
+            if (Caso.Estado == "")
             {
                 return NotFound();
+            }
+
+            if (Modo == "Cerrar")
+            {
+                RemoveModelStateCloseAction();
             }
 
             if (!ModelState.IsValid)
@@ -95,9 +98,7 @@ namespace InvestigationCaseManagement.Pages
 
             if (Modo == "Cerrar")
             {
-                if (string.IsNullOrWhiteSpace(Caso.Conclusiones) ||
-                    string.IsNullOrWhiteSpace(Caso.Recomendaciones) ||
-                    string.IsNullOrWhiteSpace(Caso.Observaciones))
+                if (string.IsNullOrWhiteSpace(Caso.Conclusiones) || string.IsNullOrWhiteSpace(Caso.Observaciones))
                 {
                     ModelState.AddModelError(string.Empty, "Todos los campos obligatorios deben estar llenos para cerrar el caso.");
                     await OnGetAsync(Caso.Id, Modo);
@@ -118,6 +119,15 @@ namespace InvestigationCaseManagement.Pages
                 return Page();
             }
 
+            if (Caso.Estado == "Asignado" && Modo == "Editar") 
+            {
+                Caso.Estado = "En Seguimiento";
+            }
+
+            Caso.Conclusiones = string.Empty;
+            Caso.Observaciones = string.Empty;
+            Caso.Soporte = Caso.Soporte ?? string.Empty;
+            Caso.UltimaActualizacion = DateTime.Now.Date;
             _context.Attach(Caso).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
@@ -126,8 +136,31 @@ namespace InvestigationCaseManagement.Pages
 
             await OnGetAsync(Caso.Id, Modo);
             return Page();
-            //return RedirectToPage("Index");
+        }
+
+        public void RemoveModelStateCloseAction()
+        {
+            ModelState.Remove("Caso.Soporte");
+        }
+        
+        public void RemoveModelState()
+        {
+            ModelState.Remove("Caso.Estado");
+            ModelState.Remove("Caso.Investigador");
+
+            if (Modo == "Editar")
+            {
+                ModelState.Remove("Caso.Conclusiones");
+                ModelState.Remove("Caso.Observaciones");
+                ModelState.Remove("Caso.Soporte");
+            }
+        }
+
+        public async Task ReAbrirCaso(Caso caso)
+        {
+            caso.Estado = "ReAbierto";
+            _context.Attach(caso).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
         }
     }
-
 }
