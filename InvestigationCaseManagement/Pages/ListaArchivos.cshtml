@@ -12,6 +12,7 @@
             <th>Número de Archivo</th>
             <th>Registrado por</th>
             <th>Fecha de registro</th>
+            <th>Fecha negado</th>
             <th>Estado</th>
             <th>Acciones</th>
         </tr>
@@ -23,6 +24,16 @@
                 <td>@archivo.Id</td>
                 <td>@archivo.Investigador?.UserName</td>
                 <td>@archivo.FechaCreacion?.ToString("yyyy-MM-dd")</td>
+                <td>
+                    @if (archivo.FechaCierre == null)
+                    {
+                        @:<!-- Si es la fecha por defecto, mostramos un valor vacío -->
+                    }
+                    else
+                    {
+                        @archivo.FechaCierre?.ToString("yyyy-MM-dd")
+                    }
+                </td>
                 <td>@archivo.Estado</td>
                 <td>
                     <a asp-page="/GestionarArchivo" asp-route-id="@archivo.Id" class="btn btn-primary">Ver</a>
