@@ -12,5 +12,6 @@ namespace InvestigationCaseManagement.Data
         }
 
         public DbSet<Caso> Casos { get; set; }
+        public DbSet<Archivo> Archivos { get; set; }
     }
 }
