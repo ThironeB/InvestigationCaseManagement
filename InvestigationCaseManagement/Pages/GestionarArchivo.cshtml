@@ -1,0 +1,92 @@
+﻿@page "{id:int}"
+@model InvestigationCaseManagement.Pages.GestionarArchivoModel
+@{
+}
+
+<h2>Gestionar Archivo</h2>
+
+<form method="post" id="RegistroArchivoForm">
+    <input type="hidden" asp-for="Archivo.Id" />
+    <h4>Personal Amonestado-Desincorporado</h4>
+    <div class="d-flex gap-3" style="padding-right: 3rem;">
+        <div class="form-group col-md-3">
+            <label asp-for="Archivo.Cedula">Cédula</label>
+            <input asp-for="Archivo.Cedula" class="form-control" readonly />
+        </div>
+        <div class="form-group col-md-3">
+            <label asp-for="Archivo.Nombre">Nombre</label>
+            <input asp-for="Archivo.Nombre" class="form-control" readonly />
+        </div>
+        <div class="form-group col-md-3">
+            <label asp-for="Archivo.Apellido">Apellido</label>
+            <input asp-for="Archivo.Apellido" class="form-control" readonly />
+        </div>
+        <div class="form-group col-md-3">
+            <label asp-for="Archivo.EmpresaId">Empresa</label>
+            <select asp-for="Archivo.EmpresaId" class="form-control" disabled>
+                @foreach (var empresa in Empresa.ObtenerEmpresa())
+                {
+                    <option value="@empresa.Id">@empresa.Nombre</option>
+                }
+            </select>
+        </div>
+    </div>
+
+    <h4>Equipos reportados robados</h4>
+
+    <div class="d-flex gap-3" style="padding-right: 3rem;">
+        <div class="form-group col-md-3">
+            <label asp-for="Archivo.Serial">Serial</label>
+            <input asp-for="Archivo.Serial" class="form-control" readonly />
+        </div>
+        <div class="form-group col-md-3">
+            <label asp-for="Archivo.TipoEquipo">Tipo de Equipo</label>
+            <input asp-for="Archivo.TipoEquipo" class="form-control" readonly />
+        </div>
+        <div class="form-group col-md-3">
+            <label asp-for="Archivo.Marca">Marca</label>
+            <input asp-for="Archivo.Marca" class="form-control" readonly />
+        </div>
+        <div class="form-group col-md-3">
+            <label asp-for="Archivo.Modelo">Modelo</label>
+            <input asp-for="Archivo.Modelo" class="form-control" readonly />
+        </div>
+    </div>
+    <div class="d-flex gap-3">
+        <div class="form-group col-md-12">
+            <label asp-for="Archivo.Observaciones">Observaciones</label>
+            <textarea asp-for="Archivo.Observaciones" class="form-control" readonly></textarea>
+        </div>
+    </div>
+
+    @if (Model.Archivo.Estado == "Abierto"){
+        <button style="margin-top: 1rem;" type="submit" class="btn btn-danger">Negar archivo</button>
+    } 
+</form>
+
+<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="successModalLabel">Éxito</h5>
+            </div>
+            <div class="modal-body">
+                La acción se completó de forma satisfactoria.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btnAceptar" onclick="window.location.href='/ListaArchivos'">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Si ViewData["MostrarPopup"] es true, mostrar la modal
+    window.onload = function() {
+        var mostrarPopup = '@ViewData["MostrarPopup"]';
+        if (mostrarPopup === 'True') {
+            var modal = new bootstrap.Modal(document.getElementById('successModal'));
+            modal.show();
+        }
+    };
+</script>

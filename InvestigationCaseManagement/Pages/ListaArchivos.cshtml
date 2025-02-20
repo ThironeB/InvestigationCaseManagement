@@ -1,0 +1,33 @@
+﻿@page
+@model InvestigationCaseManagement.Pages.ListaArchivosModel
+@{
+    ViewData["Title"] = "Gestionar Archivos";
+}
+
+<h2>Lista de Archivos</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Número de Archivo</th>
+            <th>Registrado por</th>
+            <th>Fecha de registro</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var archivo in Model.Archivos)
+        {
+            <tr>
+                <td>@archivo.Id</td>
+                <td>@archivo.Investigador?.UserName</td>
+                <td>@archivo.FechaCreacion?.ToString("yyyy-MM-dd")</td>
+                <td>@archivo.Estado</td>
+                <td>
+                    <a asp-page="/GestionarArchivo" asp-route-id="@archivo.Id" class="btn btn-primary">Ver</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
