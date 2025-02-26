@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using InvestigationCaseManagement.Data.Utilities;
 
 public class RegistroCasosModel : PageModel
 {
@@ -90,7 +91,7 @@ public class RegistroCasosModel : PageModel
     }
     public async Task RegistrarCaso(Caso caso)
     {
-        caso.Estado = User.IsInRole("Administrador") ? "Asignado" : "Abierto";
+        caso.Estado = User.IsInRole("Administrador") ? EstadoCaso.Asignado.ToString() : EstadoCaso.Abierto.ToString();
 
         _context.Casos.Add(Caso);
         await _context.SaveChangesAsync();

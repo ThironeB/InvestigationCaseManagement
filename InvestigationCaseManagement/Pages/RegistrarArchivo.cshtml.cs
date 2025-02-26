@@ -2,6 +2,7 @@ using InvestigationCaseManagement.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using InvestigationCaseManagement.Data.Utilities;
 
 namespace InvestigationCaseManagement.Pages
 {
@@ -54,7 +55,8 @@ namespace InvestigationCaseManagement.Pages
             UsuarioActualId = usuarioActual?.Id;
             UsuarioActualText = usuarioActual?.UserName;
             archivo.InvestigadorId = UsuarioActualId;
-            archivo.Estado = "Abierto";
+            archivo.Investigador = await _userManager.FindByIdAsync(UsuarioActualId);
+            archivo.Estado = EstadoCaso.Abierto.ToString();
             archivo.FechaCreacion = DateTime.Now;
 
             _context.Archivos.Add(archivo);

@@ -1,4 +1,5 @@
 ﻿@page
+@using InvestigationCaseManagement.Data.Utilities;
 @model InvestigationCaseManagement.Pages.ListaCasosModel
 @{
     ViewData["Title"] = "Lista de Casos";
@@ -23,7 +24,7 @@
                 <td>@caso.Investigador?.UserName</td>
                 <td>@caso.Estado</td>
                 <td>
-                    @if (caso.Estado == "Cerrado")
+                    @if (caso.Estado == EstadoCaso.Cerrado.ToString())
                     {
                         <a asp-page="/GestionarCaso" asp-route-id="@caso.Id" asp-route-modo="ReAbrir" class="btn btn-success">ReAbrir</a>
                     }

@@ -2,6 +2,7 @@ using InvestigationCaseManagement.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using InvestigationCaseManagement.Data.Utilities;
 
 namespace InvestigationCaseManagement.Pages
 {
@@ -46,7 +47,7 @@ namespace InvestigationCaseManagement.Pages
 
                 if (investigador != null)
                 {
-                    var casosAtendidos = _context.Casos.Count(c => c.InvestigadorId == investigadorId && c.Estado != "Asignado");
+                    var casosAtendidos = _context.Casos.Count(c => c.InvestigadorId == investigadorId && c.Estado != EstadoCaso.Asignado.ToString());
 
                     Investigadores.Add(new InvestigadorReporte
                     {

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using InvestigationCaseManagement.Data.Utilities;
 
 namespace InvestigationCaseManagement.Pages
 {
@@ -25,7 +26,7 @@ namespace InvestigationCaseManagement.Pages
         {
             // Obtener los casos asociados a la empresa
             Casos = _context.Casos
-                .Where(c => c.InvestigadorId == id && c.Estado != "Asignado")
+                .Where(c => c.InvestigadorId == id && c.Estado != EstadoCaso.Asignado.ToString())
                 .Include(c => c.Investigador)
                 .ToList();
 

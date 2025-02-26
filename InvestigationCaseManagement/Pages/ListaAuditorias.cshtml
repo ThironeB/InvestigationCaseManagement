@@ -1,0 +1,77 @@
+﻿@page
+@using InvestigationCaseManagement.Data.Utilities;
+@model InvestigationCaseManagement.Pages.ListaAuditoriasModel
+@{
+	ViewData["Title"] = "Auditoria";
+}
+
+<h2>Auditoria</h2>
+
+<form method="get">
+    <div class="form-row d-flex gap-3" style="padding-right: 2rem;">
+        <!-- Filtro de Investigador -->
+        <div class="col-md-4">
+            <label asp-for="SelectedInvestigador">Investigador</label>
+            <select asp-for="SelectedInvestigador" class="form-control">
+                <option value="">-- Seleccionar Investigador --</option>
+                @foreach (var investigador in Model.Investigadores)
+                {
+                    <option value="@investigador.Text">@investigador.Text</option>
+                }
+            </select>
+        </div>
+
+        <!-- Filtro de Entidad -->
+        <div class="col-md-4">
+            <label asp-for="SelectedEntidad">Entidad</label>
+            <select asp-for="SelectedEntidad" class="form-control">
+                <option value="">-- Seleccionar Entidad --</option>
+                <option value="Archivo">Archivo</option>
+                <option value="Caso">Caso</option>
+            </select>
+        </div>
+
+        <!-- Filtro de Acción -->
+        <div class="col-md-4">
+            <label asp-for="SelectedAccion">Acción</label>
+            <select asp-for="SelectedAccion" class="form-control">
+                <option value="">-- Seleccionar Acción --</option>
+                <option value="Added">Added</option>
+                <option value="Modified">Modified</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-md-12 mt-2">
+        <button type="submit" class="btn btn-primary">Filtrar</button>
+        <!-- Botón Limpiar -->
+        <a href="@Url.Page("/ListaAuditorias")" class="btn btn-secondary">Limpiar</a>
+    </div>
+</form>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Fecha</th>
+            <th>Usuario</th>
+            <th>Entidad</th>
+            <th>Acción</th>
+            <th>Detalles</th>
+            <th>Acciones</th> 
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var log in Model.Logs)
+        {
+            <tr>
+                <td>@log.Fecha</td>
+                <td>@log.Usuario</td>
+                <td>@log.Entidad</td>
+                <td>@log.Accion</td>
+                <td>@TruncateText.truncateText(log.Detalle)</td>
+                <td>
+                    <a asp-page="DetalleAuditoria" asp-route-id="@log.Id" class="btn btn-primary">Ver Detalle</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
