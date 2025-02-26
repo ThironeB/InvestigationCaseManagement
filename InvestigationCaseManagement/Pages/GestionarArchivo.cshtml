@@ -1,4 +1,5 @@
 ﻿@page "{id:int}"
+@using InvestigationCaseManagement.Data.Utilities
 @model InvestigationCaseManagement.Pages.GestionarArchivoModel
 @{
 }
@@ -59,7 +60,7 @@
         </div>
     </div>
 
-    @if (Model.Archivo.Estado == "Abierto"){
+    @if (Model.Archivo.Estado == EstadoCaso.Abierto.ToString()){
         <button style="margin-top: 1rem;" type="submit" class="btn btn-danger">Negar archivo</button>
     } 
 </form>

@@ -1,3 +1,4 @@
+using System.Text.Json;
 using InvestigationCaseManagement.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -42,12 +43,36 @@ namespace InvestigationCaseManagement.Pages
                 return Page();
             }
 
-            Archivo.Estado = "Negado";
-            Archivo.FechaCierre = DateTime.Now.Date;
-            _context.Attach(Archivo);
-            _context.Entry(Archivo).Property(a => a.Estado).IsModified = true;
-            _context.Entry(Archivo).Property(a => a.FechaCierre).IsModified = true;
-            await _context.SaveChangesAsync();
+            //Archivo.Estado = "Negado";
+            //Archivo.FechaCierre = DateTime.Now.Date;
+
+            var archivoEnBd = await _context.Archivos
+            .AsNoTracking() // Evita rastreo para no afectar la entidad original
+            .FirstOrDefaultAsync(a => a.Id == Archivo.Id);
+
+            //Archivo = archivoEnBd;
+
+            Archivo = JsonSerializer.Deserialize<Archivo>(JsonSerializer.Serialize(archivoEnBd));
+
+            if (archivoEnBd != null)
+            {
+                Archivo.Estado = "Negado";
+                Archivo.FechaCierre = DateTime.Now.Date;
+
+                _context.Attach(Archivo);
+                _context.Entry(Archivo).Property(a => a.Estado).IsModified = true;
+                _context.Entry(Archivo).Property(a => a.FechaCierre).IsModified = true;
+
+                // Asegurar que la auditoría registre los valores originales correctamente
+                _context.Entry(Archivo).OriginalValues.SetValues(archivoEnBd);
+
+                await _context.SaveChangesAsync();
+            }
+
+            //_context.Attach(Archivo);
+            //_context.Entry(Archivo).Property(a => a.Estado).IsModified = true;
+            //_context.Entry(Archivo).Property(a => a.FechaCierre).IsModified = true;
+            //await _context.SaveChangesAsync();
 
             ViewData["MostrarPopup"] = true;
 

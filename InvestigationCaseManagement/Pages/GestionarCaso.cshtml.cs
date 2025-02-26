@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using InvestigationCaseManagement.Data.Utilities;
 
 namespace InvestigationCaseManagement.Pages
 {
@@ -68,7 +69,7 @@ namespace InvestigationCaseManagement.Pages
             }
 
             ViewData["EsSoloLectura"] = (Modo == "Cerrar");
-            ViewData["EsReAbierto"] = Caso.Estado == "ReAbierto";
+            ViewData["EsReAbierto"] = Caso.Estado == EstadoCaso.ReAbierto.ToString();
 
             return Page();
         }
@@ -105,7 +106,7 @@ namespace InvestigationCaseManagement.Pages
                     return Page();
                 }
 
-                Caso.Estado = "Cerrado";
+                Caso.Estado = EstadoCaso.Cerrado.ToString();
             }
 
             var investigador = await _userManager.FindByIdAsync(Caso.InvestigadorId);
@@ -119,18 +120,51 @@ namespace InvestigationCaseManagement.Pages
                 return Page();
             }
 
-            if (Caso.Estado == "Asignado" && Modo == "Editar") 
+            if (Caso.Estado == EstadoCaso.Asignado.ToString() && Modo == "Editar") 
             {
                 Caso.Estado = "En Seguimiento";
             }
 
-            Caso.Conclusiones = string.Empty;
-            Caso.Observaciones = string.Empty;
+            Caso.Conclusiones = Caso.Conclusiones ?? string.Empty;
+            Caso.Observaciones = Caso.Observaciones ?? string.Empty;
             Caso.Soporte = Caso.Soporte ?? string.Empty;
             Caso.UltimaActualizacion = DateTime.Now.Date;
-            _context.Attach(Caso).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
 
+            var casoEnBd = await _context.Casos
+                    .AsNoTracking() // No rastrear para evitar conflictos
+                    .FirstOrDefaultAsync(c => c.Id == Caso.Id);
+
+            if (casoEnBd != null)
+            {
+                if (Caso.Estado == EstadoCaso.ReAbierto.ToString())
+                {
+                    _context.Attach(Caso);
+                    _context.Entry(Caso).Property(a => a.Soporte).IsModified = true;
+                    _context.Entry(Caso).Property(a => a.UltimaActualizacion).IsModified = true;
+
+                    // Aquí se asegura de que los valores originales sean los correctos
+                    _context.Entry(Caso).OriginalValues.SetValues(casoEnBd);
+
+                    await _context.SaveChangesAsync();
+                }
+                else if (System.Text.Encoding.UTF8.GetString(previousState) == EstadoCaso.ReAbierto.ToString() && Caso.Estado == EstadoCaso.Cerrado.ToString())
+                {
+                    //_context.Attach(Caso).State = EntityState.Modified;
+                    _context.Attach(Caso);
+                    _context.Entry(Caso).Property(a => a.Observaciones).IsModified = true;
+                    _context.Entry(Caso).Property(a => a.Conclusiones).IsModified = true;
+                    _context.Entry(Caso).Property(a => a.UltimaActualizacion).IsModified = true;
+                    _context.Entry(Caso).OriginalValues.SetValues(casoEnBd);
+                    await _context.SaveChangesAsync();
+                }
+                else if (Caso.Estado == "En Seguimiento")
+                {
+                    _context.Attach(Caso).State = EntityState.Modified;
+                    _context.Entry(Caso).OriginalValues.SetValues(casoEnBd);
+                    await _context.SaveChangesAsync();
+                }
+            }
+            
             HttpContext.Session.Remove("previusState");
             ViewData["MostrarPopup"] = true;
 
@@ -158,8 +192,9 @@ namespace InvestigationCaseManagement.Pages
 
         public async Task ReAbrirCaso(Caso caso)
         {
-            caso.Estado = "ReAbierto";
-            _context.Attach(caso).State = EntityState.Modified;
+            caso.Estado = EstadoCaso.ReAbierto.ToString();
+            _context.Attach(caso);
+            _context.Entry(caso).Property(a => a.Estado).IsModified = true;
             await _context.SaveChangesAsync();
         }
     }
