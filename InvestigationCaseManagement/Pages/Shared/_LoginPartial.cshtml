@@ -1,10 +1,31 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
+@inject InvestigationCaseManagement.Services.NotificationService NotificationService
+
+@{
+    int notificacionesNoLeidas = 0;
+    @if (SignInManager.IsSignedIn(User))
+    {
+        var user = UserManager.GetUserAsync(User).Result;
+        notificacionesNoLeidas = user != null ? NotificationService.CountObtenerNotificacionesNoLeidas(user.Id) : 0;
+    }
+}
 
 <ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
 {
+    <li class="nav-item">
+        <a class="nav-link text-dark position-relative" id="notificaciones-tab" asp-area="" asp-page="/Notificaciones">
+            <i class="bi bi-bell"></i>
+            @if (notificacionesNoLeidas > 0)
+            {
+                <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
+                    <span class="visually-hidden">New alerts</span>
+                </span>
+            }
+        </a>
+    </li>
     <li class="nav-item">
         <a  class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity?.Name!</a>
     </li>

@@ -6,7 +6,9 @@ obj/
 .vs/
 
 # Archivos de la carpeta wwwroot (si no son estáticos)
-wwwroot/
+/wwwroot/*
+!/wwwroot/css/
+!/wwwroot/js/
 
 # Archivos de usuario de Visual Studio
 *.user

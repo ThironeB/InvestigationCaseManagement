@@ -29,43 +29,6 @@ namespace InvestigationCaseManagement.Data
             _httpContextAccessor = httpContextAccessor;
         }
 
-        //public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-        //{
-        //    var auditorias = new List<Auditoria>();
-
-        //    foreach (var entry in ChangeTracker.Entries())
-        //    {
-        //        if (entry.Entity is Caso || entry.Entity is Archivo)
-        //        {
-        //            var entidad = entry.Entity.GetType().Name;
-        //            var datosJson = JsonSerializer.Serialize(entry.Entity); // Convertir entidad a JSON
-
-
-        //            var entidadId = (int)entry.Property("Id").CurrentValue;
-
-        //            var auditoria = new Auditoria
-        //            {
-        //                Entidad = entidad,
-        //                EntidadId = entidadId,
-        //                Usuario = UserContext,
-        //                Accion = entry.State.ToString(),
-        //                Detalle = entry.State == EntityState.Modified
-        //                    ? string.Join(", ", entry.Properties
-        //                        .Where(p => p.IsModified)
-        //                        .Select(p => $"{p.Metadata.Name}: {p.OriginalValue} -> {p.CurrentValue}"))
-        //                    : "Nuevo Registro",
-        //                DatosEntidad = datosJson,
-        //                Fecha = DateTime.Now
-        //            };
-
-        //            auditorias.Add(auditoria);
-        //        }
-        //    }
-
-        //    await Auditorias.AddRangeAsync(auditorias);
-        //    return await base.SaveChangesAsync(cancellationToken);
-        //}
-
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             var auditorias = new List<Auditoria>();
@@ -141,5 +104,7 @@ namespace InvestigationCaseManagement.Data
         public DbSet<Caso> Casos { get; set; }
         public DbSet<Archivo> Archivos { get; set; }
         public DbSet<Auditoria> Auditorias { get; set; }
+        public DbSet<Notificacion> Notificaciones { get; set; }
+
     }
 }

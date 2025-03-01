@@ -103,5 +103,10 @@ namespace InvestigationCaseManagement.Data
         [Required]
         public int ProcedenciaCasoId { get; set; }
         public ProcedenciaCaso ProcedenciaCaso => ProcedenciaCaso.ObtenerProcedenciaCaso().FirstOrDefault(t => t.Id == ProcedenciaCasoId) ?? new ProcedenciaCaso();
+
+        public bool NecesitaAtencion()
+        {
+            return (DateTime.Now - (UltimaActualizacion != DateTime.MinValue ? UltimaActualizacion : FechaInicio)).TotalDays > 1;
+        }
     }
 }
