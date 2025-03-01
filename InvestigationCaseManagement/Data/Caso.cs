@@ -108,5 +108,15 @@ namespace InvestigationCaseManagement.Data
         {
             return (DateTime.Now - (UltimaActualizacion != DateTime.MinValue ? UltimaActualizacion : FechaInicio)).TotalDays > 1;
         }
+
+        public string TiempoSinAtencionFormateado()
+        {
+            var tiempoSinAtencion = DateTime.Now - (UltimaActualizacion != DateTime.MinValue ? UltimaActualizacion : FechaInicio);
+            int dias = tiempoSinAtencion.Days;
+            int horas = tiempoSinAtencion.Hours;
+            int minutos = tiempoSinAtencion.Minutes;
+
+            return $"{dias} Días, {horas} Horas y {minutos} Minutos";
+        }
     }
 }

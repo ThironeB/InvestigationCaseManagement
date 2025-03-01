@@ -1,5 +1,6 @@
 ﻿@page
 @model InvestigationCaseManagement.Pages.NotificacionesModel
+@inject InvestigationCaseManagement.Services.NotificationService NotificationService
 
 <h3>Notificaciones</h3>
 
@@ -26,6 +27,9 @@ else
                     </a>
                 </th>
                 <th>
+                    <span>Tiempo sin atención</span>
+                </th>
+                <th>
                     <a asp-page="./Notificaciones" asp-route-sortColumn="FechaCreacion" asp-route-sortAscending="@(Model.SortColumn == "FechaCreacion" ? !Model.SortAscending : true)">
                         Fecha de Creación
                         @if (Model.SortColumn == "FechaCreacion")
@@ -42,6 +46,7 @@ else
             {
                 <tr>
                     <td>@notificacion.Mensaje</td>
+                    <td>@NotificationService.ObtenerCasoPorNroExpedienteAsync(notificacion.NroExpediente()).Result.TiempoSinAtencionFormateado()</td>
                     <td>@notificacion.FechaCreacion</td>
                     <td>
                         <form method="post" asp-page-handler="MarcarComoLeida" asp-route-id="@notificacion.Id">

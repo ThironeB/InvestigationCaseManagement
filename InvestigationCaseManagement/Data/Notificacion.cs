@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
 namespace InvestigationCaseManagement.Data
@@ -17,6 +18,12 @@ namespace InvestigationCaseManagement.Data
         public bool Leida { get; set; } = false;
 
         public DateTime FechaCreacion { get; set; } = DateTime.Now;
+
+        public string NroExpediente()
+        {
+            var nroExpediente = Mensaje.Split(" ")[2];
+            return nroExpediente;
+        }
 
     }
 }
