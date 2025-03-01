@@ -1,0 +1,98 @@
+﻿html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+.paddignRightCustom-1 {
+    padding-right: 1rem;
+}
+
+.paddignRightCustom-2 {
+    padding-right: 2rem;
+}
+
+.paddignRightCustom-3 {
+    padding-right: 3rem;
+}
+
+.asc::after {
+    content: "▲";
+    font-size: 0.8em;
+    margin-left: 5px;
+}
+
+.desc::after {
+    content: "▼";
+    font-size: 0.8em;
+    margin-left: 5px;
+}
+
+.position-relative {
+    position: relative !important;
+}
+
+.position-absolute {
+    position: absolute !important;
+}
+
+.top-0 {
+    top: 9px !important;
+}
+
+.start-100 {
+    left: 100% !important;
+}
+
+.translate-middle {
+    transform: translate(-50%, -50%) !important;
+}
+
+.bg-danger {
+    background-color: #dc3545 !important;
+}
+
+.border {
+    border: 1px solid #dee2e6 !important;
+}
+
+.border-light {
+    border-color: #f8f9fa !important;
+}
+
+.rounded-circle {
+    border-radius: 50% !important;
+}
+
+.p-1 {
+    padding: 0.25rem !important;
+}
+
+.visually-hidden {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}

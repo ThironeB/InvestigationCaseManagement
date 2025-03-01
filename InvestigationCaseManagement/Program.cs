@@ -1,4 +1,5 @@
 using InvestigationCaseManagement.Data;
+using InvestigationCaseManagement.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,6 +21,10 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.Sign
 
 builder.Services.AddRazorPages();
 builder.Services.AddSession();
+// Registrar NotificationService
+builder.Services.AddTransient<NotificationService>();
+// Registrar IHttpContextAccessor
+builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 

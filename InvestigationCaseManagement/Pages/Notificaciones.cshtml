@@ -1,0 +1,55 @@
+﻿@page
+@model InvestigationCaseManagement.Pages.NotificacionesModel
+
+<h3>Notificaciones</h3>
+
+@if (Model.Notificaciones == null)
+{
+    <p>Cargando...</p>
+}
+else if (!Model.Notificaciones.Any())
+{
+    <p>No hay notificaciones.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    <a asp-page="./Notificaciones" asp-route-sortColumn="Mensaje" asp-route-sortAscending="@(Model.SortColumn == "Mensaje" ? !Model.SortAscending : true)">
+                        Mensaje
+                        @if (Model.SortColumn == "Mensaje")
+                        {
+                            <span class="@(Model.SortAscending ? "asc" : "desc")"></span>
+                        }
+                    </a>
+                </th>
+                <th>
+                    <a asp-page="./Notificaciones" asp-route-sortColumn="FechaCreacion" asp-route-sortAscending="@(Model.SortColumn == "FechaCreacion" ? !Model.SortAscending : true)">
+                        Fecha de Creación
+                        @if (Model.SortColumn == "FechaCreacion")
+                        {
+                            <span class="@(Model.SortAscending ? "asc" : "desc")"></span>
+                        }
+                    </a>
+                </th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var notificacion in Model.Notificaciones)
+            {
+                <tr>
+                    <td>@notificacion.Mensaje</td>
+                    <td>@notificacion.FechaCreacion</td>
+                    <td>
+                        <form method="post" asp-page-handler="MarcarComoLeida" asp-route-id="@notificacion.Id">
+                            <button type="submit" class="btn btn-sm btn-primary">Marcar como leída</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
