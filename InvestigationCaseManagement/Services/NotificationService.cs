@@ -73,11 +73,18 @@ namespace InvestigationCaseManagement.Services
                 await _context.SaveChangesAsync();
             }
         }
+
         public int CountObtenerNotificacionesNoLeidas(string usuarioId)
         {
             return _context.Notificaciones
                 .Where(n => n.UsuarioId == usuarioId && !n.Leida)
                 .Any() ? 1 : 0;
+        }
+
+        public async Task<Caso> ObtenerCasoPorNroExpedienteAsync(string nroExpediente)
+        {
+            return await _context.Casos
+                .FirstOrDefaultAsync(c => c.NumeroExpediente == nroExpediente);
         }
     }
 }
