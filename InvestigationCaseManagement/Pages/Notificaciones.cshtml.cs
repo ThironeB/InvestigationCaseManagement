@@ -31,9 +31,10 @@ namespace InvestigationCaseManagement.Pages
             var user = await _userManager.GetUserAsync(User);
             if (user != null)
             {
-                var notificaciones = await _notificationService.ObtenerNotificacionesNoLeidasAsync(user.Id);
+                var notificaciones = await _notificationService.ObtenerNotificacionesNoLeidasAsync(user.Id); // Obtener las notificaciones no leidas
 
-                Notificaciones = SortColumn switch
+                // Ordenar las notificaciones segun la columna seleccionada en la interfaz
+                Notificaciones = SortColumn switch 
                 {
                     "Mensaje" => SortAscending ? notificaciones.OrderBy(n => n.Mensaje).ToList() : notificaciones.OrderByDescending(n => n.Mensaje).ToList(),
                     "FechaCreacion" => SortAscending ? notificaciones.OrderBy(n => n.FechaCreacion).ToList() : notificaciones.OrderByDescending(n => n.FechaCreacion).ToList(),
@@ -42,6 +43,14 @@ namespace InvestigationCaseManagement.Pages
             }
         }
 
+        /// <summary>
+        /// Esta funcion marca de forma asincrona una notificacion como leida y luego redirige a la pagina.
+        /// </summary>
+        /// <param name="id">El parametro `id` en el metodo `OnPostMarcarComoLeidaAsync` se usa para
+        /// identificar la notificacion especifica que necesita ser marcada como leida. 
+        /// <returns>
+        /// El metodo esta retornando una redireccion a la misma pagina.
+        /// </returns>
         public async Task<IActionResult> OnPostMarcarComoLeidaAsync(int id)
         {
             await _notificationService.MarcarComoLeidaAsync(id);

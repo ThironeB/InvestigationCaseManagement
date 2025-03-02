@@ -1,4 +1,5 @@
 ﻿@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
 
 <!DOCTYPE html>
 <html lang="en">
@@ -22,11 +23,9 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
+                        <!-- Si el usuario está autenticado, se muestran los tabs en el menu -->
                         @if (SignInManager.IsSignedIn(User))
                         {
-                            @* <li class="nav-item">
-                                <a class="nav-link text-dark active" asp-area="" asp-page="/Index">Inicio</a>
-                            </li> *@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" id="registro-tab" asp-area="" asp-page="/RegistroCasos">Registro de Casos</a>
                             </li>
@@ -36,19 +35,24 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" id="registrar-archivo-tab" asp-area="" asp-page="/RegistrarArchivo">Registrar Archivo</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" id="gestionar-archivo-tab" asp-area="" asp-page="/ListaArchivos">Gestionar Archivo</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" id="reportes-tab" asp-area="" asp-page="/Reportes">Reportes</a>
-                            </li>
+                            // Si el usuario es administrador, se le muestran las opciones de gestionar archivo y reportes
+                            @if (UserManager.IsInRoleAsync(UserManager.GetUserAsync(User).Result, "Administrador").Result) 
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" id="gestionar-archivo-tab" asp-area="" asp-page="/ListaArchivos">Gestionar Archivo</a>
+                                </li>
+                            
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" id="reportes-tab" asp-area="" asp-page="/Reportes">Reportes</a>
+                                </li>
+                            }
                             <li class="nav-item">
                                 <a class="nav-link text-dark" id="auditoria-tab" asp-area="" asp-page="/ListaAuditorias">Auditoria</a>
                             </li>
                         }
                     </ul>
                     <ul class="navbar-nav">
-                        <partial name="_LoginPartial" /> <!-- Mantén el código del login y registro -->
+                        <partial name="_LoginPartial" /> <!-- Código del login y registro -->
                     </ul>
                 </div>
             </div>
@@ -57,12 +61,6 @@
 
     <div class="container">
         <main role="main" class="pb-3">
-            @* <div class="tab-content">
-                <div class="tab-pane fade show active" id="registro" role="tabpanel" aria-labelledby="registro-tab">
-                    @RenderBody() <!-- Aquí se renderizará el formulario de registro -->
-                </div>
-                <!-- Agrega más contenido de pestañas aquí -->
-            </div> *@
             @RenderBody()
         </main>
     </div>

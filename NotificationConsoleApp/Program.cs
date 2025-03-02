@@ -9,6 +9,10 @@ using InvestigationCaseManagement.Services;
 
 class Program
 {
+    /// <summary>
+    // La función Main en C# crea un host, recupera un NotificationService del proveedor de servicios 
+    // y verifica y envía notificaciones de forma asincrónica.
+    /// </summary>
     static async Task Main(string[] args)
     {
         var host = CreateHostBuilder(args).Build();
@@ -18,7 +22,7 @@ class Program
             try
             {
                 var notificationService = services.GetRequiredService<NotificationService>();
-                await notificationService.CheckAndSendNotificationsAsync();
+                await notificationService.CheckAndSendNotificationsAsync(); //Llamada al metodo asincrono encargado de enviar notificaciones.
             }
             catch (Exception ex)
             {
@@ -27,6 +31,10 @@ class Program
         }
     }
 
+    /// <summary>
+    // La función CreateHostBuilder configura un generador de host en C# para configurar servicios 
+    // como el contexto de base de datos y el servicio de notificación.
+    /// </summary>
     static IHostBuilder CreateHostBuilder(string[] args) =>
         Host.CreateDefaultBuilder(args)
             .ConfigureServices((context, services) =>
@@ -34,6 +42,6 @@ class Program
                 services.AddDbContext<ApplicationDbContext>(options =>
                     options.UseSqlServer(context.Configuration.GetConnectionString("DefaultConnection")));
                 services.AddTransient<NotificationService>();
-                services.AddHttpContextAccessor(); // Registrar IHttpContextAccessor
+                services.AddHttpContextAccessor();
             });
 }

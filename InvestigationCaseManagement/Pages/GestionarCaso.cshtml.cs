@@ -19,9 +19,9 @@ namespace InvestigationCaseManagement.Pages
             _userManager = userManager;
         }
 
-        public List<SelectListItem> Investigadores { get; set; }
-        public string UsuarioActualId { get; set; }
-        public string UsuarioActualText { get; set; }
+        public List<SelectListItem> Investigadores { get; set; } // Lista de investigadores
+        public string UsuarioActualId { get; set; } // ID del usuario actual
+        public string UsuarioActualText { get; set; } // Nombre del usuario actual
 
         [BindProperty]
         public Caso Caso { get; set; } = new Caso();
@@ -33,8 +33,12 @@ namespace InvestigationCaseManagement.Pages
         {
             if (modo != "Editar" && modo != "Cerrar" && modo != "ReAbrir")
             {
-                return BadRequest("Modo inv·lido");
+                return BadRequest("Modo invalido");
             }
+
+            var usuarioActual = await _userManager.GetUserAsync(User);
+            UsuarioActualId = usuarioActual?.Id;
+            UsuarioActualText = usuarioActual?.UserName;
 
             Modo = modo;
             Caso = await _context.Casos.FindAsync(id);
@@ -54,7 +58,7 @@ namespace InvestigationCaseManagement.Pages
             {
                 // Obtener la lista de investigadores (usuarios con rol "Investigador")
                 Investigadores = await _context.Users
-                    .Where(u => _context.UserRoles.Any(ur => ur.UserId == u.Id && ur.RoleId == "68a24bd8-6f5d-4951-9e41-45b232780e1a"))
+                    .Where(u => _context.UserRoles.Any(ur => ur.UserId == u.Id && ur.RoleId == RoleIdentifier.Investigador.ToString()))
                     .Select(u => new SelectListItem
                     {
                         Value = u.Id,
@@ -76,9 +80,9 @@ namespace InvestigationCaseManagement.Pages
 
         public async Task<IActionResult> OnPostAsync()
         {
-            RemoveModelState();
+            RemoveModelState(); // Eliminar el estado del modelo para casos que no apliquen
             byte[]? previousState;
-            var pState = HttpContext.Session.TryGetValue("previousState", out previousState);
+            var pState = HttpContext.Session.TryGetValue("previousState", out previousState); // Obtener el estado anterior del caso
             Caso.Estado = previousState != null ? System.Text.Encoding.UTF8.GetString(previousState) : "";
 
             if (Caso.Estado == "")
@@ -88,7 +92,7 @@ namespace InvestigationCaseManagement.Pages
 
             if (Modo == "Cerrar")
             {
-                RemoveModelStateCloseAction();
+                RemoveModelStateCloseAction(); // Eliminar el estado del modelo para casos que no apliquen
             }
 
             if (!ModelState.IsValid)
@@ -120,9 +124,9 @@ namespace InvestigationCaseManagement.Pages
                 return Page();
             }
 
-            if (Caso.Estado == EstadoCaso.Asignado.ToString() && Modo == "Editar") 
+            if ((Caso.Estado == EstadoCaso.Asignado.ToString() || Caso.Estado == EstadoCaso.Abierto.ToString()) && Modo == "Editar")  // Si el caso esta en estado "Abierto" o "Asignado" y el modo es "Editar"
             {
-                Caso.Estado = "En Seguimiento";
+                Caso.Estado = "En Seguimiento"; 
             }
 
             Caso.Conclusiones = Caso.Conclusiones ?? string.Empty;
@@ -141,15 +145,12 @@ namespace InvestigationCaseManagement.Pages
                     _context.Attach(Caso);
                     _context.Entry(Caso).Property(a => a.Soporte).IsModified = true;
                     _context.Entry(Caso).Property(a => a.UltimaActualizacion).IsModified = true;
-
-                    // AquÌ se asegura de que los valores originales sean los correctos
                     _context.Entry(Caso).OriginalValues.SetValues(casoEnBd);
 
                     await _context.SaveChangesAsync();
                 }
-                else if (System.Text.Encoding.UTF8.GetString(previousState) == EstadoCaso.ReAbierto.ToString() && Caso.Estado == EstadoCaso.Cerrado.ToString())
+                else if ((System.Text.Encoding.UTF8.GetString(previousState) == EstadoCaso.ReAbierto.ToString() || System.Text.Encoding.UTF8.GetString(previousState) == EstadoCaso.Asignado.ToString() || System.Text.Encoding.UTF8.GetString(previousState) == "En Seguimiento") && Caso.Estado == EstadoCaso.Cerrado.ToString()) // Si el caso estaba en estado "ReAbierto", "Asignado" o "En Seguimiento" y se desea cerrar
                 {
-                    //_context.Attach(Caso).State = EntityState.Modified;
                     _context.Attach(Caso);
                     _context.Entry(Caso).Property(a => a.Observaciones).IsModified = true;
                     _context.Entry(Caso).Property(a => a.Conclusiones).IsModified = true;
@@ -190,6 +191,12 @@ namespace InvestigationCaseManagement.Pages
             }
         }
 
+        /// <summary>
+        /// La funcion ReAbrirCaso actualiza el estado de un caso a "ReAbierto" en la base de datos.
+        /// </summary>
+        /// <param name="Caso">Caso es una entidad que representa un caso en la aplicaci√≥n. El m√©todo
+        /// ReAbrirCaso toma una instancia de esta clase como par√°metro y actualiza el Estado del caso a
+        /// "ReAbierto" en la base de datos.</param>
         public async Task ReAbrirCaso(Caso caso)
         {
             caso.Estado = EstadoCaso.ReAbierto.ToString();

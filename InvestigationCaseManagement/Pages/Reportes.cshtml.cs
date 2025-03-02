@@ -22,7 +22,7 @@ namespace InvestigationCaseManagement.Pages
 
         public async Task OnGetAsync()
         {
-            // Obtener lista de empresas desde el código
+            // Obtener lista de empresas estaticas
             var empresasLista = Empresa.ObtenerEmpresa();
 
             // Contar los casos por empresa
@@ -33,17 +33,17 @@ namespace InvestigationCaseManagement.Pages
                 CasosRegistrados = _context.Casos.Count(c => c.EmpresaId == e.Id)
             }).ToList();
 
-            // Obtener la lista de investigadores (usando AspNetUsers) y contar casos atendidos
+            // Obtener la lista de investigadores y contar los casos atendidos
             var investigadoresIds = _context.Casos
                 .Select(c => c.InvestigadorId)  // Obtener todos los InvestigadorIds desde los casos
                 .Distinct()
                 .ToList();
 
-            // Obtener la información de los investigadores
+            // Obtener la informacion de los investigadores
             Investigadores = new List<InvestigadorReporte>();
             foreach (var investigadorId in investigadoresIds)
             {
-                var investigador = await _userManager.FindByIdAsync(investigadorId);  // Obtener datos del investigador desde AspNetUsers
+                var investigador = await _userManager.FindByIdAsync(investigadorId);
 
                 if (investigador != null)
                 {
@@ -52,7 +52,7 @@ namespace InvestigationCaseManagement.Pages
                     Investigadores.Add(new InvestigadorReporte
                     {
                         Id = investigador.Id,
-                        Nombre = investigador.UserName,  // O puedes usar otro campo como Email o cualquier propiedad de IdentityUser
+                        Nombre = investigador.UserName,
                         CasosAtendidos = casosAtendidos
                     });
                 }

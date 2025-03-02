@@ -4,7 +4,7 @@
     ViewData["Title"] = "Detalle de Auditoría";
 }
 
-<h2>Detalle de Auditoría</h2>
+<h2>@ViewData["Title"]</h2>
 
 <div class="d-flex gap-3" style="padding-right: 3rem;">
     <div class="form-group col-md-3">
@@ -17,7 +17,14 @@
         <p><strong>Entidad:</strong> @Model.Auditoria.Entidad</p>
     </div>
     <div class="form-group col-md-3">
-        <p><strong>Acción:</strong> @Model.Auditoria.Accion</p>
+        <p><strong>Acción:</strong> @if (Model.Auditoria.Accion == "Added")
+            {
+                <span>Creado</span>
+            }
+            else {
+                <span>Modificado</span>
+            }
+        </p>
     </div>
 </div>
 <div class="d-flex gap-3" style="padding-right: 3rem;">

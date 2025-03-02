@@ -13,6 +13,7 @@ namespace InvestigationCaseManagement.Pages
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
 
+        // Constructor de la clase GestionarArchivoModel
         public GestionarArchivoModel(ApplicationDbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
@@ -20,11 +21,11 @@ namespace InvestigationCaseManagement.Pages
         }
 
         [BindProperty]
-        public Archivo Archivo { get; set; } = new Archivo();
+        public Archivo Archivo { get; set; } = new Archivo(); // Archivo a gestionar
 
-        public async Task<IActionResult> OnGetAsync(int id)
+        public async Task<IActionResult> OnGetAsync(int id) // MÃ©todo para obtener el archivo por ID
         {
-            Archivo = await _context.Archivos.FindAsync(id);
+            Archivo = await _context.Archivos.FindAsync(id); // Buscar el archivo por ID
             if (Archivo == null)
             {
                 return NotFound();
@@ -35,7 +36,7 @@ namespace InvestigationCaseManagement.Pages
 
         public async Task<IActionResult> OnPostAsync()
         {
-            RemoveModelState();
+            RemoveModelState(); // Eliminar el estado del modelo para casos que no apliquen
 
             if (!ModelState.IsValid)
             {
@@ -43,17 +44,13 @@ namespace InvestigationCaseManagement.Pages
                 return Page();
             }
 
-            //Archivo.Estado = "Negado";
-            //Archivo.FechaCierre = DateTime.Now.Date;
-
-            var archivoEnBd = await _context.Archivos
+            var archivoEnBd = await _context.Archivos // Obtener el archivo de la base de datos
             .AsNoTracking() // Evita rastreo para no afectar la entidad original
             .FirstOrDefaultAsync(a => a.Id == Archivo.Id);
 
-            //Archivo = archivoEnBd;
-
             Archivo = JsonSerializer.Deserialize<Archivo>(JsonSerializer.Serialize(archivoEnBd));
 
+            // Verificar si el archivo existe en la base de datos y actualizar su estado y fecha de cierre.
             if (archivoEnBd != null)
             {
                 Archivo.Estado = "Negado";
@@ -62,17 +59,10 @@ namespace InvestigationCaseManagement.Pages
                 _context.Attach(Archivo);
                 _context.Entry(Archivo).Property(a => a.Estado).IsModified = true;
                 _context.Entry(Archivo).Property(a => a.FechaCierre).IsModified = true;
-
-                // Asegurar que la auditoría registre los valores originales correctamente
                 _context.Entry(Archivo).OriginalValues.SetValues(archivoEnBd);
 
                 await _context.SaveChangesAsync();
             }
-
-            //_context.Attach(Archivo);
-            //_context.Entry(Archivo).Property(a => a.Estado).IsModified = true;
-            //_context.Entry(Archivo).Property(a => a.FechaCierre).IsModified = true;
-            //await _context.SaveChangesAsync();
 
             ViewData["MostrarPopup"] = true;
 

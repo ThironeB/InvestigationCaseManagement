@@ -98,11 +98,9 @@ namespace InvestigationCaseManagement.Areas.Identity.Pages.Account
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
 
-            [Display(Name = "Administrador")]
-            public bool IsAdmin { get; set; } = false; // Checkbox para Administrador
-
-            [Display(Name = "Investigador")]
-            public bool IsInvestigador { get; set; } = true; // Checkbox para Investigador (seleccionado por defecto)
+            [Required]
+            [Display(Name = "RolSeleccionado")]
+            public string RolSeleccionado { get; set; }  // "Admin" o "Investigador"
         }
 
 
@@ -126,13 +124,12 @@ namespace InvestigationCaseManagement.Areas.Identity.Pages.Account
 
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User created a new account with password.");
                     // Asignar el rol seleccionado
-                    if (Input.IsAdmin)
+                    if (Input.RolSeleccionado == "Administrador")
                     {
-                        await _userManager.AddToRoleAsync(user, "Admin");
+                        await _userManager.AddToRoleAsync(user, "Administrador");
                     }
-                    else if (Input.IsInvestigador)
+                    else if (Input.RolSeleccionado == "Investigador")
                     {
                         await _userManager.AddToRoleAsync(user, "Investigador");
                     }
@@ -146,8 +143,8 @@ namespace InvestigationCaseManagement.Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    await _emailSender.SendEmailAsync(Input.Email, "Confirmar correo",
+                        $"Por favor confirma tu cuenta <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>haciendo click aquí</a>.");
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {

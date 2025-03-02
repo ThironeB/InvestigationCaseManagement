@@ -4,7 +4,7 @@
     ViewData["Title"] = "Detalle de Empresa";
 }
 
-<h2>Detalle de Empresa</h2>
+<h2>@ViewData["Title"]</h2>
 <h4>@Model.Empresa?.Nombre</h4>
 
 @if (Model.Casos.Any())
@@ -30,7 +30,7 @@
                     <td>
                         @if (caso.UltimaActualizacion == DateTime.MinValue)
                         {
-                            @:<!-- Si es la fecha por defecto, mostramos un valor vacío -->
+                            @:<!-- Si es la fecha por defecto, se muestra un valor vacío -->
                         }
                         else
                         {

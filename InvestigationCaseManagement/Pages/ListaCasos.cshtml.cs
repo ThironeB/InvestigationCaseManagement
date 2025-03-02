@@ -16,20 +16,20 @@ namespace InvestigationCaseManagement.Pages
         {
             var usuarioActual = await _userManager.GetUserAsync(User);
             var rolesUsuario = await _userManager.GetRolesAsync(usuarioActual);
-            // Obtener todos los casos con la información del investigador asignado
+            // Obtener todos los casos con la informacion del investigador asignado
             if (rolesUsuario.Contains("Administrador"))
             {
                 // Si el usuario es Administrador, ver todos los casos
                 Casos = await _context.Casos
-                    .Include(c => c.Investigador) // Cargar la relación con el investigador
+                    .Include(c => c.Investigador) // Cargar la relacion con el investigador
                     .OrderBy(c => c.Id) // Ordenar por id
                     .ToListAsync();
             }
             else if (rolesUsuario.Contains("Investigador"))
             {
-                // Si el usuario es Investigador, ver solo los casos asignados a él
+                // Si el usuario es Investigador, ver solo los casos asignados a el
                 Casos = await _context.Casos
-                    .Include(c => c.Investigador) // Cargar la relación con el investigador
+                    .Include(c => c.Investigador) // Cargar la relacion con el investigador
                     .Where(c => c.InvestigadorId == usuarioActual.Id) // Filtrar por el ID del investigador
                     .OrderBy(c => c.Id) // Ordenar por id
                     .ToListAsync();
