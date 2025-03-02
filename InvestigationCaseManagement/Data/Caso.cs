@@ -7,10 +7,10 @@ namespace InvestigationCaseManagement.Data
 {
     public class Caso
     {
-        public int Id { get; set; }
+        public int Id { get; set; } // Identificador único del caso
 
         [Required]
-        public string NumeroExpediente { get; set; }
+        public string NumeroExpediente { get; set; } // Número de expediente
 
         public string InvestigadorId { get; set; } // FK para el investigador asignado
 
@@ -23,7 +23,7 @@ namespace InvestigationCaseManagement.Data
         public int DuracionDias { get; set; } // Duración en días
 
         [Required]
-        public string TipoCaso { get; set; } // Tipo de caso (Gestión, Reclamo, Caso)
+        public string TipoCaso { get; set; } // Tipo de caso 
 
         [Required]
         public string MovilAfectado { get; set; } // Móvil afectado
@@ -57,59 +57,59 @@ namespace InvestigationCaseManagement.Data
 
         [Required]
         public string Soporte { get; set; } = string.Empty;// Soporte
-        public string Estado { get; set; } // Estado del caso (Abierto, Asignado, Cerrado, Re-abierto)
+        public string Estado { get; set; } // Estado del caso (Abierto, Asignado, Cerrado, ReAbierto)
 
-        public DateTime UltimaActualizacion { get; set; }
+        public DateTime UltimaActualizacion { get; set; } // Fecha de la última actualización
 
         [Required]
-        public string PersonasInvolucradas { get; set; }
+        public string PersonasInvolucradas { get; set; } // Personas involucradas
 
         [Required]
         [Precision(18,2)]
-        public Decimal MontoExpuesto { get; set; }
+        public Decimal MontoExpuesto { get; set; } // Monto expuesto
 
         [Required]
-        public int TipoProyectoId { get; set; }
+        public int TipoProyectoId { get; set; } // FK para el tipo de proyecto
         public TipoProyecto TipoProyecto => TipoProyecto.ObtenerTipos().FirstOrDefault(t => t.Id == TipoProyectoId) ?? new TipoProyecto();
 
         [Required]
-        public int TipoBrechaId { get; set; }
+        public int TipoBrechaId { get; set; } // FK para el tipo de brecha
         public TipoBrecha TipoBrecha => TipoBrecha.ObtenerTipos().FirstOrDefault(t => t.Id == TipoBrechaId) ?? new TipoBrecha();
 
         [Required]
-        public int ProcesoCorregidoId { get; set; }
+        public int ProcesoCorregidoId { get; set; } // FK para el proceso corregido
         public ProcesoCorregido ProcesoCorregido => ProcesoCorregido.ObtenerProcesos().FirstOrDefault(t => t.Id == ProcesoCorregidoId) ?? new ProcesoCorregido();
 
         [Required]
-        public int ProcesoRealizadoId { get; set; }
+        public int ProcesoRealizadoId { get; set; } // FK para el proceso realizado
         public ProcesoRealizado ProcesoRealizado => ProcesoRealizado.ObtenerProcesos().FirstOrDefault(t => t.Id == ProcesoRealizadoId) ?? new ProcesoRealizado();
 
         [Required]
-        public int EmpresaId { get; set; }
+        public int EmpresaId { get; set; } // FK para la empresa
         public Empresa Empresa => Empresa.ObtenerEmpresa().FirstOrDefault(t => t.Id == EmpresaId) ?? new Empresa();
 
         [Required]
-        public int SubTipoFichaId { get; set; }
+        public int SubTipoFichaId { get; set; } // FK para el subtipo de ficha
         public SubTipoFicha SubTipoFicha => SubTipoFicha.ObtenerSubTipoFicha().FirstOrDefault(t => t.Id == SubTipoFichaId) ?? new SubTipoFicha();
 
         [Required]
-        public int TipoIrregularidadId { get; set; }
+        public int TipoIrregularidadId { get; set; } // FK para el tipo de irregularidad
         public TipoIrregularidad TipoIrregularidad => TipoIrregularidad.ObtenerTipoIrregularidad().FirstOrDefault(t => t.Id == TipoIrregularidadId) ?? new TipoIrregularidad();
 
         [Required]
-        public int SubTipoIrregularidadId { get; set; }
+        public int SubTipoIrregularidadId { get; set; } // FK para el subtipo de irregularidad
         public SubTipoIrregularidad SubTipoIrregularidad => SubTipoIrregularidad.ObtenerSubTipoIrregularidad().FirstOrDefault(t => t.Id == SubTipoIrregularidadId) ?? new SubTipoIrregularidad();
 
         [Required]
-        public int ProcedenciaCasoId { get; set; }
+        public int ProcedenciaCasoId { get; set; } // FK para la procedencia del caso
         public ProcedenciaCaso ProcedenciaCaso => ProcedenciaCaso.ObtenerProcedenciaCaso().FirstOrDefault(t => t.Id == ProcedenciaCasoId) ?? new ProcedenciaCaso();
 
-        public bool NecesitaAtencion()
+        public bool NecesitaAtencion() // Casos que necesitan atencion. Tienen +1 dias sin atencion.
         {
             return (DateTime.Now - (UltimaActualizacion != DateTime.MinValue ? UltimaActualizacion : FechaInicio)).TotalDays > 1;
         }
 
-        public string TiempoSinAtencionFormateado()
+        public string TiempoSinAtencionFormateado() // Formatear el tiempo sin atencion
         {
             var tiempoSinAtencion = DateTime.Now - (UltimaActualizacion != DateTime.MinValue ? UltimaActualizacion : FechaInicio);
             int dias = tiempoSinAtencion.Days;

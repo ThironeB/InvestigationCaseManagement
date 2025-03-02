@@ -38,7 +38,7 @@ public class RegistroCasosModel : PageModel
         {
             // Obtener la lista de investigadores (usuarios con rol "Investigador")
             Investigadores = await _context.Users
-                .Where(u => _context.UserRoles.Any(ur => ur.UserId == u.Id && ur.RoleId == "68a24bd8-6f5d-4951-9e41-45b232780e1a"))
+                .Where(u => _context.UserRoles.Any(ur => ur.UserId == u.Id && ur.RoleId == RoleIdentifier.Investigador.ToString()))
                 .Select(u => new SelectListItem
                 {
                     Value = u.Id,
@@ -55,9 +55,9 @@ public class RegistroCasosModel : PageModel
 
     public async Task<IActionResult> OnPostAsync()
     {
-        RemoveModelState();
+        RemoveModelState(); // Remover los estados de los campos que no se deben validar
 
-        var investigador = await _userManager.FindByIdAsync(Caso.InvestigadorId);
+        var investigador = await _userManager.FindByIdAsync(Caso.InvestigadorId); // Obtener el investigador seleccionado
         if (investigador != null)
         {
             Caso.Investigador = investigador;
@@ -77,7 +77,7 @@ public class RegistroCasosModel : PageModel
         Caso.Observaciones = string.Empty;
         Caso.Soporte = string.Empty;
 
-        await RegistrarCaso(Caso);
+        await RegistrarCaso(Caso); // Registrar el caso
 
         return Page();
     }
@@ -89,6 +89,13 @@ public class RegistroCasosModel : PageModel
         ModelState.Remove("Caso.Observaciones");
         ModelState.Remove("Caso.Soporte");
     }
+
+    /// <summary>
+    /// La función "RegistrarCaso" registra de forma asíncrona un caso, establece su estado en función del rol del usuario,
+    /// lo agrega a la base de datos y muestra un mensaje emergente.
+    /// </summary>
+    /// <param name="Caso">Caso es un objeto que representa un caso en la aplicacion. La propiedad
+    /// Estado se establece en función del rol del usuario.</param>
     public async Task RegistrarCaso(Caso caso)
     {
         caso.Estado = User.IsInRole("Administrador") ? EstadoCaso.Asignado.ToString() : EstadoCaso.Abierto.ToString();

@@ -5,7 +5,7 @@
     ViewData["Title"] = "Lista de Casos";
 }
 
-<h2>Lista de Casos</h2>
+<h2>@ViewData["Title"]</h2>
 
 <table class="table table-striped">
     <thead>
@@ -31,7 +31,10 @@
                     else
                     {
                         <a asp-page="/GestionarCaso" asp-route-id="@caso.Id" asp-route-modo="Editar" class="btn btn-primary">Editar</a>
-                        <a asp-page="/GestionarCaso" asp-route-id="@caso.Id" asp-route-modo="Cerrar" class="btn btn-danger">Cerrar</a>
+						if (caso.Estado != EstadoCaso.Abierto.ToString())
+						{
+                            <a asp-page="/GestionarCaso" asp-route-id="@caso.Id" asp-route-modo="Cerrar" class="btn btn-danger">Cerrar</a>
+                        }
                     }
                 </td>
             </tr>

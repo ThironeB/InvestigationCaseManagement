@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using InvestigationCaseManagement.Data.Utilities;
 
 namespace InvestigationCaseManagement.Pages
 {
@@ -17,8 +18,8 @@ namespace InvestigationCaseManagement.Pages
             _userManager = userManager;
         }
 
-        public List<Auditoria> Logs { get; set; }
-        public List<SelectListItem> Investigadores { get; set; } = new List<SelectListItem>();
+        public List<Auditoria> Logs { get; set; } // Lista de auditorias
+        public List<SelectListItem> Investigadores { get; set; } = new List<SelectListItem>(); // Lista de investigadores
 
         [BindProperty(SupportsGet = true)]
         public string SelectedInvestigador { get; set; }
@@ -33,40 +34,32 @@ namespace InvestigationCaseManagement.Pages
 
         public async Task OnGetAsync()
         {
-            //var usuarioActual = await _userManager.GetUserAsync(User);
-            //UsuarioActualId = usuarioActual?.Id;
-            //UsuarioActualText = usuarioActual?.UserName;
+            var usuarioActual = await _userManager.GetUserAsync(User);
+            UsuarioActualId = usuarioActual?.Id;
+            UsuarioActualText = usuarioActual?.UserName;
 
-            //if (User.IsInRole("Administrador"))
-            //{
-            //    // Obtener la lista de investigadores (usuarios con rol "Investigador")
-            //    Investigadores = await _context.Users
-            //        .Where(u => _context.UserRoles.Any(ur => ur.UserId == u.Id && ur.RoleId == "68a24bd8-6f5d-4951-9e41-45b232780e1a"))
-            //        .Select(u => new SelectListItem
-            //        {
-            //            Value = u.Id,
-            //            Text = u.UserName
-            //        })
-            //        .ToListAsync();
-            //}
-            //else
-            //{
-            //    // Si el usuario es un investigador, asignar su ID al caso
-            //    //Caso.InvestigadorId = UsuarioActualId;
-            //}
-
-            //Logs = _context.Auditorias
-            //.OrderByDescending(a => a.Fecha)
-            //.ToList();
-
-            Investigadores = await _context.Users
-                    //.Where(u => _context.UserRoles.Any(ur => ur.UserId == u.Id && ur.RoleId == "68a24bd8-6f5d-4951-9e41-45b232780e1a"))
+            if (await _userManager.IsInRoleAsync(usuarioActual, "Administrador"))
+            {
+                // Si el usuario es un administrador, mostrar todos los investigadores
+                Investigadores = await _context.Users
                     .Select(u => new SelectListItem
                     {
                         Value = u.Id,
                         Text = u.UserName
                     })
-                    .ToListAsync();// Trae los investigadores
+                    .ToListAsync();
+            }
+            else if (await _userManager.IsInRoleAsync(usuarioActual, "Investigador"))
+            {
+                // Si el usuario es un investigador, solo mostrar su propio usuario
+                Investigadores.Add(new SelectListItem
+                {
+                    Value = UsuarioActualId,
+                    Text = UsuarioActualText,
+                    Selected = true
+                });
+                SelectedInvestigador = UsuarioActualText;
+            }
 
             // Construir la consulta base
             IQueryable<Auditoria> query = _context.Auditorias.OrderByDescending(a => a.Fecha);
@@ -87,8 +80,8 @@ namespace InvestigationCaseManagement.Pages
                 query = query.Where(a => a.Accion == SelectedAccion);
             }
 
-            // Ejecutar la consulta y obtener los resultados
-            Logs = await query.ToListAsync();
+            // Ejecutar la consulta y obtener las auditorias filtradas
+            Logs = await query.ToListAsync(); 
         }
     }
 }

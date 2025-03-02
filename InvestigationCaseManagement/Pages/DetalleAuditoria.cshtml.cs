@@ -12,27 +12,29 @@ namespace InvestigationCaseManagement.Pages
     {
         private readonly ApplicationDbContext _context;
 
+        /* Constructor para la clase DetalleAuditoriaModel */
         public DetalleAuditoriaModel(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        public Auditoria Auditoria { get; set; }
-        public string DatosDeserializados { get; set; }
+        public Auditoria Auditoria { get; set; } // Auditoria a mostrar
+        public string DatosDeserializados { get; set; } // Datos deserializados de la auditoria
+        
         public async Task<IActionResult> OnGetAsync(int id)
         {
-            Auditoria = await _context.Auditorias.FirstOrDefaultAsync(a => a.Id == id);
+            Auditoria = await _context.Auditorias.FirstOrDefaultAsync(a => a.Id == id); // Obtener la auditoria por ID
 
-            if (Auditoria == null)
+            if (Auditoria == null) // Si no se encuentra la auditoria, retornar NotFound
             {
                 return NotFound();
             }
 
             try
             {
-                var jsonObject = JsonNode.Parse(Auditoria.DatosEntidad);
+                var jsonObject = JsonNode.Parse(Auditoria.DatosEntidad); // Parsear el JSON de la auditoria
 
-                // Verificar si existe la propiedad "Investigador" en el JSON
+                // Verificar si existe la propiedad "Investigador" en el JSON y filtrar sus propiedades sensibles
                 if (jsonObject is JsonObject obj && obj.ContainsKey("Investigador"))
                 {
                     var investigador = obj["Investigador"]?.AsObject();

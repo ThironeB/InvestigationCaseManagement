@@ -11,6 +11,9 @@ namespace InvestigationCaseManagement.Data
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private string _userContext;
+
+        /* La propiedad `UserContext` es una propiedad de acceso que se
+        encarga de recuperar la información del contexto de usuario. */
         public string UserContext { get {
                 if (!string.IsNullOrEmpty(_userContext))
                 {
@@ -23,12 +26,29 @@ namespace InvestigationCaseManagement.Data
                 }
             } 
         }
+
+        /* Constructor para la clase ApplicationDbContext */
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IHttpContextAccessor httpContextAccessor)
        : base(options)
         {
             _httpContextAccessor = httpContextAccessor;
         }
 
+
+        /// <summary>
+        /// La funcion `SaveChangesAsync` en C# guarda de forma asincrona los cambios en las entidades,
+        //  mientras también registra información de auditoría para ciertos tipos de entidades.
+        /// </summary>
+        /// <param name="CancellationToken">El parámetro `CancellationToken` en el método `SaveChangesAsync`
+        /// le permite pasar un token que se puede utilizar para solicitar la cancelación de una
+        /// operación asincrónica. Este token se puede utilizar para propagar la notificación de que las
+        /// operaciones deben cancelarse.</param>
+        /// <returns>
+        /// El método `SaveChangesAsync` devuelve un valor entero que representa el resultado de guardar
+        /// los cambios en la base de datos. Este valor se obtiene al llamar a `base.SaveChangesAsync(cancellationToken)`
+        /// y se almacena en la variable `resultado` antes de realizar cualquier procesamiento adicional.
+        /// Este valor entero representa típicamente el número de entidades afectadas por la operación de guardado.
+        /// </returns>
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             var auditorias = new List<Auditoria>();
@@ -36,12 +56,12 @@ namespace InvestigationCaseManagement.Data
 
             foreach (var entry in ChangeTracker.Entries())
             {
-                if (entry.Entity is Caso || entry.Entity is Archivo)
+                if (entry.Entity is Caso || entry.Entity is Archivo) // Solo auditar Casos y Archivos
                 {
-                    var entidad = entry.Entity.GetType().Name;
+                    var entidad = entry.Entity.GetType().Name; // Nombre de la entidad
                     var datosJson = JsonSerializer.Serialize(entry.Entity); // Convertir entidad a JSON
 
-                    if (entry.State == EntityState.Added)
+                    if (entry.State == EntityState.Added) // Si es una entidad nueva
                     {
                         // No tenemos el Id todavía, lo guardamos para después
                         entidadesNuevas.Add((entry.Entity, entry));
@@ -50,7 +70,7 @@ namespace InvestigationCaseManagement.Data
                     {
                         var entidadId = (int)entry.Property("Id").CurrentValue;
 
-                        var auditoria = new Auditoria
+                        var auditoria = new Auditoria // Crear objeto Auditoria
                         {
                             Entidad = entidad,
                             EntidadId = entidadId,
@@ -92,7 +112,7 @@ namespace InvestigationCaseManagement.Data
             }
 
             // Guardamos las auditorías con los Ids correctos
-            if (auditorias.Any()) // Evitar inserción vacía
+            if (auditorias.Any() && UserContext != "Sistema") // Evitar inserción vacía o inserciones por el sistema de notificaciones
             {
                 await Auditorias.AddRangeAsync(auditorias);
                 await base.SaveChangesAsync(cancellationToken);
@@ -101,6 +121,7 @@ namespace InvestigationCaseManagement.Data
             return resultado;
         }
 
+        /* Las siguientes propiedades representan tablas de base de datos utilizando Entity Framework Core. */
         public DbSet<Caso> Casos { get; set; }
         public DbSet<Archivo> Archivos { get; set; }
         public DbSet<Auditoria> Auditorias { get; set; }

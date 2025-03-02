@@ -20,7 +20,7 @@ namespace InvestigationCaseManagement.Pages
         }
 
         [BindProperty]
-        public Archivo Archivo { get; set; } = new Archivo();
+        public Archivo Archivo { get; set; } = new Archivo(); // Archivo a registrar
 
         public async Task OnGetAsync()
         {
@@ -29,7 +29,7 @@ namespace InvestigationCaseManagement.Pages
 
         public async Task<IActionResult> OnPostAsync()
         {
-            RemoveModelState();
+            RemoveModelState(); // Eliminar el estado del modelo para casos que no apliquen
 
             if (!ModelState.IsValid)
             {
@@ -37,7 +37,7 @@ namespace InvestigationCaseManagement.Pages
                 return Page();
             }
 
-            await RegistrarArchivo(Archivo);
+            await RegistrarArchivo(Archivo); // Registrar el archivo
 
             return Page();
         }
@@ -49,6 +49,13 @@ namespace InvestigationCaseManagement.Pages
             ModelState.Remove("Archivo.InvestigadorId");
         }
 
+        /// <summary>
+        /// La función "RegistrarArchivo" registra de forma asíncrona un archivo, asigna el usuario actual como
+        /// el investigador, establece el estado del archivo como "Abierto" y lo guarda en la base de datos.
+        /// </summary>
+        /// <param name="Archivo">Archivo es una clase que representa un archivo o documento en este contexto. Contiene
+        /// propiedades como InvestigadorId, Investigador, Estado, FechaCreacion, etc. El método RegistrarArchivo es
+        /// responsable de registrar un nuevo archivo en el sistema.</param>
         public async Task RegistrarArchivo(Archivo archivo)
         {
             var usuarioActual = await _userManager.GetUserAsync(User);
@@ -59,7 +66,7 @@ namespace InvestigationCaseManagement.Pages
             archivo.Estado = EstadoCaso.Abierto.ToString();
             archivo.FechaCreacion = DateTime.Now;
 
-            _context.Archivos.Add(archivo);
+            _context.Archivos.Add(archivo); // Agregar el archivo a la base de datos
             await _context.SaveChangesAsync();
             ViewData["MostrarPopup"] = true;
         }

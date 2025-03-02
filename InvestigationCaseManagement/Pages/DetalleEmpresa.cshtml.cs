@@ -11,18 +11,19 @@ namespace InvestigationCaseManagement.Pages
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
 
+        // Constructor de la clase DetalleEmpresaModel
         public DetalleEmpresaModel(ApplicationDbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
             _userManager = userManager;
         }
 
-        public Empresa? Empresa { get; set; }
-        public List<Caso> Casos { get; set; } = new();
+        public Empresa? Empresa { get; set; } // Empresa a mostrar
+        public List<Caso> Casos { get; set; } = new(); // Lista de casos asociados a la empresa
 
         public async Task<IActionResult> OnGet(int id)
         {
-            // Buscar la empresa en la lista estática
+            // Buscar la empresa en la lista estatica
             Empresa = Empresa.ObtenerEmpresa().FirstOrDefault(e => e.Id == id);
             if (Empresa == null)
             {

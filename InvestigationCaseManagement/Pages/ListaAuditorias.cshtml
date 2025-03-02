@@ -2,21 +2,21 @@
 @using InvestigationCaseManagement.Data.Utilities;
 @model InvestigationCaseManagement.Pages.ListaAuditoriasModel
 @{
-	ViewData["Title"] = "Auditoria";
+    ViewData["Title"] = "Auditoria";
 }
 
-<h2>Auditoria</h2>
+<h2>@ViewData["Title"]</h2>
 
 <form method="get">
     <div class="form-row d-flex gap-3" style="padding-right: 2rem;">
         <!-- Filtro de Investigador -->
         <div class="col-md-4">
             <label asp-for="SelectedInvestigador">Investigador</label>
-            <select asp-for="SelectedInvestigador" class="form-control">
+            <select asp-for="SelectedInvestigador" class="form-control" enabled="@(Model.Investigadores.Count == 1 ? false : true )">
                 <option value="">-- Seleccionar Investigador --</option>
                 @foreach (var investigador in Model.Investigadores)
                 {
-                    <option value="@investigador.Text">@investigador.Text</option>
+                    <option value="@investigador.Text" selected="@(investigador.Selected ? true : false)">@investigador.Text</option>
                 }
             </select>
         </div>
@@ -36,8 +36,8 @@
             <label asp-for="SelectedAccion">Acción</label>
             <select asp-for="SelectedAccion" class="form-control">
                 <option value="">-- Seleccionar Acción --</option>
-                <option value="Added">Added</option>
-                <option value="Modified">Modified</option>
+                <option value="Added">Creado</option>
+                <option value="Modified">Modificado</option>
             </select>
         </div>
     </div>
@@ -66,8 +66,14 @@
                 <td>@log.Fecha</td>
                 <td>@log.Usuario</td>
                 <td>@log.Entidad</td>
-                <td>@log.Accion</td>
-                <td>@TruncateText.truncateText(log.Detalle)</td>
+                <td>
+                    @if (log.Accion == "Added") {
+						<span>Creado</span>
+                    } else {
+                        <span>Modificado</span>
+                    }
+                </td >
+            <td>@TruncateText.truncateText(log.Detalle)</td>
                 <td>
                     <a asp-page="DetalleAuditoria" asp-route-id="@log.Id" class="btn btn-primary">Ver Detalle</a>
                 </td>
