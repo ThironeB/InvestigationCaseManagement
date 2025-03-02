@@ -33,8 +33,12 @@ namespace InvestigationCaseManagement.Pages
         {
             if (modo != "Editar" && modo != "Cerrar" && modo != "ReAbrir")
             {
-                return BadRequest("Modo inv�lido");
+                return BadRequest("Modo invalido");
             }
+
+            var usuarioActual = await _userManager.GetUserAsync(User);
+            UsuarioActualId = usuarioActual?.Id;
+            UsuarioActualText = usuarioActual?.UserName;
 
             Modo = modo;
             Caso = await _context.Casos.FindAsync(id);
